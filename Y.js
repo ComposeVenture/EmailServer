@@ -1,1585 +1,836 @@
+const SHEETURL='https://docs.google.com/spreadsheets/d/1IbSB2xrDMuUy56NvR7a7_nGScEP3iV_8LjNavN8EGHY/edit';
+
 const AUTORUN=()=>{
+   
+    if (localStorage.getItem('UserData') && !localStorage.getItem('Verification') ) {
+        
+        HOMEPAGE();
 
-    PAGESDOWNLOAD();
+        if (localStorage.getItem('NetWork')) {
 
-    if (localStorage.getItem('User')) {
+            MOVIESDATA();
 
-        HomePage();
+        }
 
-        CONTACTSDOWNLOAD();
-    
         return;
 
     } else {
 
-        if (localStorage.getItem('EmailVerification')) {
+        if (localStorage.getItem('Verification')) {
 
-            EMAILVERIFICATION();
+            EMAILVERIFICATIONPAGE();
 
             return;
             
         }
-       
-        LoginPage()
-
-        return;
         
+        LOGINPAGE();
+
+        return
+
     }
   
 }
 
-const HomePage=()=>{
-
-    DISPLAY('',`
-
-        <header>
-
-            <img class='LeftedIcon' src='${WHITEMENUICON}'/>
-
-            <h3 class='AppName'>Connections</h3>
-
-            <img class='RightedIcon' onclick='RELOADPAGE()' src='${WHITRETRYICON}'/>
-        
-        </header>
-
-        <div class='HomeDivHolder'></div>
-
-        <div class='MenuDiv'>
-
-            <header>
-
-                <img id='CloseMenu' class='LeftedIcon' src='${WHITEBACKICON}'/> 
-                
-            </header>
-
-            <div class='MenuOptions'>
-
-                <button id='SaveNumberButton' class='Profile' >
-
-                    <h3 class='SaveName'>Profile</h3>
-
-                    <img class='SaveImage' src='${WHITEPROFILEICON}'/>
-
-                </button>
-
-                <button id='SaveNumberButton' class='SharedContacts' >
-
-                    <h3 class='SaveName'>Shared</h3>
-
-                    <img class='SaveImage' src='${WHITESHAREICON}'/>
-
-                </button>
-
-                <button id='SaveNumberButton' >
-
-                    <h3 class='SaveName'>Help</h3>
-
-                    <img class='SaveImage' src='${WHITEHELPICON}'/>
-
-                </button>
-
-                <button id='SaveNumberButton' >
-
-                    <h3 class='SaveName'>Settings</h3>
-
-                    <img class='SaveImage' src='${WHITESETTINGICON}'/>
-
-                </button>
-
-                <button id='SaveNumberButton' class='PrivacyPloicy' >
-
-                    <h3 class='SaveName'>Policy</h3>
-
-                    <img class='SaveImage' src='${WHITEPRIVACYPOLICYICON}'/>
-
-                </button>
-
-                <button id='SaveNumberButton' class='LogOut' >
-
-                    <h3 class='SaveName'>Log Out</h3>
-
-                    <img class='SaveImage' src='${WHITELOGOUT}'/>
-
-                </button>
-
-            </div>
-        
-        </div>
-
-        <button class='FixedButton' onclick='CREATENUMBERPAGE()'>
-
-            <img src='${WHITEPOSTICON}'/>
-        
-        </button>
-
-    `);
-
-    const MenuDiv=document.querySelector('.MenuDiv');
-
-    HOMECONTACTS();
-
-    SHAREDCONTACTSDOWNLOAD();
-    
-    USERSDOWNLOAD();
-
-    CLICKED('.LeftedIcon',()=>{STYLED(MenuDiv,'display','block');});
-
-    CLICKED('#CloseMenu',()=>{ STYLED(MenuDiv,'display','none');});
-
-    CLICKED('.SharedContacts',()=>{SHAREDCONTACTSPAGE()});
-
-    CLICKED('.LogOut',()=>{ DELETESTORAGE('local','User');RELOADPAGE();});
-
-    CLICKED('.PrivacyPloicy',()=>{ 
-        
-        DISPLAY('',`
-            
-            <header>
-
-                <img class='LeftedIcon' onclick='HomePage()' src='${WHITEBACKICON}'/>
-
-                <h3 class='ContactUserName'>Privacy Policy</h3>
-            
-            </header>
-
-            <div class='HomeDivHolder'>${localStorage.getItem('PrivacyPolicy')}</div>
-
-        `);
-        
-    });
-
-    CLICKED('.Profile',()=>{USERACCOUNTPAGE()})
-
-}
-
-const LoginPage=()=>{
+const LOGINPAGE=()=>{
 
     DISPLAY('',`
 
         <img class='AppLogo' src='${APPLOGO}'/>
 
-        <h3 class='colorgray'>Enter User Email</h3>
+        <p>Your Home Cinema</p>
 
-        <input type='email' class='EmailLogin' placeholder='Enter User Email' />
+        <input type='email' id='UserEmail' class='Input' placeholder='Enter User Email' />
 
-        <button class='forestgreen'>Acccess Now</button>
-        
+        <input type='password' id='UserPassword' class='Input' placeholder='Enter User Password' />
+
+        <button class='SignInButton'>Sign In </button>
+
+        <button onclick='CREATEACCOUNTPAGE()' class='SignUpButton'>Create Account </button>
+
     `);
 
-    const EmailLogin=document.querySelector('.EmailLogin');
+    const UserEmail=document.querySelector('#UserEmail');
 
-    DECLARATION('.forestgreen',(ELEMENT)=>{
+    const UserPassword=document.querySelector('#UserPassword');
 
-        EVENT(ELEMENT,'click',()=>{
+    DECLARATION('.SignInButton',(ELEMENT)=>{
 
-            if (!EmailLogin.value) {
-        
-                TOAST('Email Cannot Be Empty');
-        
+        CLICKED('.SignInButton',()=>{
+
+            if (!UserEmail.value) {
+
+                TOAST('Enter User Email');
+
                 return;
+                
+            }
+
+            if (!UserPassword.value) {
+
+                TOAST('Enter User Password');
+
+                return;
+                
+            }
+
+            LOADER(ELEMENT);
+
+            GETDATA(SHEETURL,'Users',(data)=>{
+
+                FINDER(data,'UserEmail',UserEmail.value,(users)=>{
+
+                    if (users.UserEmail === UserEmail.value) {
+
+                        if (users.UserPassword === UserPassword.value ) {
+
+                            JSONIFICATION(users,(ConvertedData)=>{
         
-            } 
-        
-            RANDOMCODE((code)=>{
-        
-                if (localStorage.getItem('NetWork')) {
-        
-                    LOADER(ELEMENT);
-        
-                    POSTMAIL(EmailLogin.value,"Access Code",code,(data)=>{
-        
-                        STORE('local','EmailVerification',code);
-            
-                        STORE('local','MyEmail',EmailLogin.value);
-            
-                        EMAILVERIFICATION();
-            
-                    })
-        
-                    return;
-                    
-                } else {
-                    
-                    TOAST('Check Your Internet Connection')
-        
-                };
-        
-            });
+                                STORE('local','UserData',ConvertedData);
 
-        });  
+                                DELETESTORAGE('local','Verification');
 
-    });
+                                HOMEPAGE();
 
-};
-
-const PAGESDOWNLOAD=()=>{
-
-    if (localStorage.getItem('NetWork')) {
-
-        const DATA={
-
-            "sheetName":"Connections"
-    
-        };
-    
-        POSTPACKAGE(GETAPI,'',DATA,(data)=>{
-    
-            REDUX(data,(element)=>{
-    
-                STORE('local',element.Name,element.Link);
-    
-            });
-    
-        });
-
-        return;
-        
-    }
-
-};
-
-const CONTACTSDOWNLOAD=()=>{
-
-    if (localStorage.getItem('NetWork')) {
-
-        DEJSON('local','User',(info)=>{
-
-            const DATA={
-    
-                "sheetName":info.UserDataBase
-        
-            };
-        
-            POSTPACKAGE(GETAPI,'',DATA,(data)=>{
-        
-                const NUMBERS={
-                    "Name":"Contacts",
-                    "Data":data
-                }
-        
-                STOREINDEXED('Connections','Contacts',NUMBERS,(dataone)=>{
-
-                    if (dataone === false ) {
-
-                        STORE('local','ContactsUpdated','Updated');
-
-                        HOMECONTACTS();
-                        
-                    } else {
-
-                        if (localStorage.getItem('ContactsUpdated')) {
-
-                            UPDATEINDEXED('Connections','Contacts',NUMBERS);
+                            })
 
                             return;
                             
-                        }else{
-
-                            AUTORUN();
-                        }
- 
-                    }
-
-
-                })
-        
-            });
-    
-        })
-
-        return;
-        
-    }
-
-};
-
-const HOMECONTACTS=()=>{
-
-    const MenuDiv=document.querySelector('.MenuDiv');
-
-    DECLARATION('.HomeDivHolder',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'scroll',()=>{
-
-            STYLED(MenuDiv,'display','none');
-
-        })
-
-        LOADER(ELEMENT,'Loader');
-
-        GETINDEXED('Connections','Contacts',(data)=>{
-
-            CLEAR(ELEMENT);
-
-            REDUX(data,(element)=>{
-
-                REDUX(element.Data.reverse(),(elementOne)=>{
-    
-                    CREATEELEMENT('div','ContactsHolder',(ELEMENTED)=>{
-    
-                        DISPLAY(ELEMENTED,`
-    
-                            <img id='UserImage' class='LeftedIcon' src='${elementOne.ProfileContact||WHITEUSERICON}'/>
-                                
-                            <h1 class='ContactsName'>${elementOne.UserName}</h1>
-    
-                            <p class='FirstNumber' >${elementOne.FirstNumber}</p>
-    
-                        `);
-    
-                        ADD(ELEMENT,ELEMENTED);
-
-                        EVENT(ELEMENTED,'click',()=>{
-
-                            JSONIFICATION(elementOne,(dara)=>{
-
-                                DELETESTORAGE('','Navigation');
-
-                                STORE('','ContactUser',dara);
-
-                                USERCONTACT();
-
-                            })
-
-                        })
-    
-                    });
-    
-                });
-
-            });
-
-        })
-
-    })
-
-};
-
-const CREATENUMBERPAGE=()=>{
-
-    DISPLAY('',`
-
-        <header>
-
-            <img class='LeftedIcon' onclick='HomePage()' src='${WHITEBACKICON}'/>
-
-            <h3 class='AppName'>Connections</h3>
-        
-        </header>
-
-        <div class='HomeDivHolder'>
-
-            <div class='ImageHolderCreation'>
-
-                <img class='CreateUserImage'  src='${WHITEUSERICON}'/>
-                
-            </div>
-
-            <p class='AddUser'>Add a Photo</p>
-
-            <input type='text' id='UserName' placeholder=' Contact Name' >
-
-            <input type='tel' id='FirstNumber' placeholder=' First Number' >
-
-            <input type='tel' id='SecondNumber' placeholder=' Second Number' >
-
-            <input type='tel' id='ThirdNumber' placeholder=' Third Number' >
-
-            <input type='tel' id='FourthNumber' placeholder=' Fourth Number' >
-
-            <input type='email' id='PersonalEmail' placeholder=' Personal Email' >
-
-            <input type='email' id='WorkEmail' placeholder='Work Email' >
-
-            <input type='text' id='Location' placeholder=' Contact Location' >
-
-            <textarea id='AboutUser' placeholder='About Person'></textarea>
-
-            <button id='SaveNumberButton' class='forestgreen'>
-
-                <h3 class='SaveName'>Save</h3>
-
-                <img class='SaveImage' src='${WHITESAVEICON}'/>
-
-            </button>
-        
-        </div>
-
-    `);
-
-    const UserName=document.querySelector('#UserName');
-    const FirstNumber=document.querySelector('#FirstNumber');
-    const SecondNumber=document.querySelector('#SecondNumber');
-    const ThirdNumber=document.querySelector('#ThirdNumber');
-    const FourthNumber=document.querySelector('#FourthNumber');
-    const PersonalEmail=document.querySelector('#PersonalEmail');
-    const WorkEmail=document.querySelector('#WorkEmail');
-    const Location=document.querySelector('#Location');
-    const AboutUser=document.querySelector('#AboutUser');
-
-    CLICKED('.AddUser',()=>{IMAGEPICKER('.CreateUserImage',(data)=>{STORE('','UserImage',data)})});
-
-    DECLARATION('.forestgreen',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'click',()=>{
-
-            if (!UserName.value) {
-
-                TOAST('Enter Contact Name');
-
-                return;
-            }
-
-            if (!FirstNumber.value) {
-
-                TOAST('Enter Contact Name');
-
-                return;
-            }
-
-            if (localStorage.getItem('NetWork')) {
-
-                DEJSON('local','User',(data)=>{
-
-                    const USERDATA={
-                        "sheetName":data.UserDataBase,
-                        "ContactID": Date.now(),
-                        "CreatedBy": data.UserID,
-                        "CreatedOn": new Date(),
-                        "Details": AboutUser.value,
-                        "FirstNumber": FirstNumber.value,
-                        "FourthNumber": FourthNumber.value,
-                        "Location": Location.value,
-                        "PersonalEmail": PersonalEmail.value,
-                        "ProfileContact": sessionStorage.getItem('UserImage'),
-                        "SecondNumber": SecondNumber.value,
-                        "ThirdNumber": ThirdNumber.value,
-                        "UserID": Date.now(),
-                        "UserName": UserName.value,
-                        "WorkEmail": WorkEmail.value
-                    }
-    
-                    const DATA={
-        
-                        "sheetName":data.UserDataBase
-                
-                    };
-    
-                    LOADER(ELEMENT);
-    
-                    POSTPACKAGE(localStorage.getItem('CreateUsersApi'),'',USERDATA,(reso)=>{
-    
-                        DELETESTORAGE('','UserImage');
-    
-                        POSTPACKAGE(GETAPI,'',DATA,(data)=>{
-            
-                            const NUMBERS={
-                                "Name":"Contacts",
-                                "Data":data
-                            }
-                    
-                            STOREINDEXED('Connections','Contacts',NUMBERS,(dataone)=>{
-                    
-                                if (dataone === true ) {
-                    
-                                    STORE('local','ContactsUpdated','Updated');
-                    
-                                    HomePage();
-                                    
-                                }else{
-                    
-                                    if (localStorage.getItem('ContactsUpdated')) {
-                                        
-                                        UPDATEINDEXED('Connections','Contacts',NUMBERS);
-    
-                                        HomePage();
-                    
-                                    } else {
-                    
-                                        AUTORUN();
-                    
-                                    }
-                    
-                                }
-                    
-                            })
-                    
-                        });
-    
-                    })
-    
-                })    
-                
-            } else {
-                
-                TOAST('Check Your Internet Connection')
-
-            }
-
-        });
-
-    });
-
-};
-
-const EMAILVERIFICATION=()=>{
-
-    DISPLAY('',`
-
-        <img class='BackEmailVerification' src='${WHITEBACKICON}'/>
-
-        <img class='AppLogo' src='${WHITESMSICON}'/>
-
-        <h3 class='colorgray'>Enter Verification Code</h3>
-
-        <input type='tel' maxlength='6' class='EmailVerificationLogin' placeholder='Enter verification Code' />
-
-        <button id='LoginAccessNowBtn' class='forestgreen'>Acccess Now</button>
-        
-    `);
-
-    const EmailLogin=document.querySelector('.EmailVerificationLogin');
-
-    CLICKED('.BackEmailVerification',()=>{
-
-        DELETESTORAGE('local','EmailVerification');
-    
-        DELETESTORAGE('local','MyEmail');
-    
-        AUTORUN();
-    
-        return;
-
-    });
-
-    DECLARATION('#LoginAccessNowBtn',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'click',()=>{
-
-            if (!EmailLogin.value) {
-        
-                TOAST('Enter Verification Code');
-        
-                return;
-        
-            };
-
-            if (EmailLogin.value !== localStorage.getItem('EmailVerification').toString()) {
-            
-                TOAST('Wrong Verification Code');
-
-                return;
-                
-            };
-
-            if (localStorage.getItem('NetWork')) {
-
-                LOADER(ELEMENT);
-        
-                const USERS={
-                    "sheetName":"Users"
-                }
-            
-                POSTPACKAGE(GETAPI,'',USERS,(data)=>{
-            
-                    FINDER(data,'UserEmail',localStorage.getItem('MyEmail'),(User)=>{
-            
-                        if (User.UserEmail === localStorage.getItem('MyEmail') ) {
+                        } else {
                             
-                            JSONIFICATION(User,(info)=>{
-            
-                                STORE('local','User',info);
-            
-                                DELETESTORAGE('local','EmailVerification');
-            
-                                DELETESTORAGE('local','MyEmail');
-            
-                                AUTORUN();
-            
-                                return;
-            
-                            })
-            
-                        }else{
-            
-                            ORIGIN(ELEMENT,'Access Now');
-            
-                            TOAST('No User Account Found')
-                
-                        }
-            
-                    });
-            
-                });
-        
-                return;
-                
-            } else {
-        
-                TOAST('Check Your Internet Connection');
-                
-            }
+                            TOAST('Wrong User Password');
 
-        })
-
-    })
-
-};
-
-const CONTACTSUPDATES=()=>{
-
-    if (localStorage.getItem('NetWork')) {
-
-        DEJSON('local','User',(info)=>{
-
-            const DATA={
+                            ORIGIN(ELEMENT,'Sign In');
     
-                "sheetName":info.UserDataBase
-        
-            };
-        
-            POSTPACKAGE(GETAPI,'',DATA,(data)=>{
-        
-                const NUMBERS={
-                    "Name":"Contacts",
-                    "Data":data
-                }
-        
-                STOREINDEXED('Connections','Contacts',NUMBERS,(dataone)=>{
+                            return;
 
-                    console.log(dataone);
+                        }
+                        
+                    }else{
 
-                    if (dataone === true ) {
+                        TOAST('No User Account Found');
 
-                        STORE('local','ContactsUpdated','Updated');
-
-                        HOMECONTACTS();
+                        ORIGIN(ELEMENT,'Sign In');
 
                         return;
-                        
-                    } else {
 
-                        if (localStorage.getItem('ContactsUpdated')) {
-
-                            UPDATEINDEXED('Connections','Contacts',NUMBERS);
-
-                            return;
-                            
-                        }else{
-
-                            AUTORUN();
-
-                            return;
-                        }
- 
                     }
 
-                })
-        
-        
+                });
+
             });
-    
+
         })
 
-        return;
+    });
+
+}
+
+const CREATEACCOUNTPAGE=()=>{
+
+    DISPLAY('',`
+
+        <img class='AppLogo' src='${APPLOGO}'/>
+
+        <p>Your Home Cinema</p>
+
+         <input type='text' id='UserName' class='Input' placeholder='Enter User Name' />
+
+        <input type='email' id='UserEmail' class='Input' placeholder='Enter User Email' />
+
+        <input type='password' id='UserPassword' class='Input' placeholder='Enter User Password' />
+
+        <button class='SignInButton'>Sign Up </button>
+
+        <button onclick='LOGINPAGE()' class='SignUpButton'>Log In </button>
+
+    `);
+
+    DECLARATION('.SignInButton',(ELEMENT)=>{
+
+        const USERNAME=document.querySelector('#UserName');
+        const USEREMAIL=document.querySelector('#UserEmail');
+        const USERPASSWORD=document.querySelector('#UserPassword');
+
+        CLICKED('.SignInButton',()=>{
+
+            if (!USERNAME.value) {
+                
+                TOAST('Enter User Name');
+
+                return;
+
+            };
+
+            if (!USEREMAIL.value) {
+                
+                TOAST('Enter User Email');
+
+                return;
+
+            };
+
+            if (!USERPASSWORD.value) {
+                
+                TOAST('Enter User Password');
+
+                return;
+
+            };
+
+            LOADER(ELEMENT);
+
+            GETDATA(SHEETURL,'Users',(data)=>{
+
+                FINDER(data,'UserEmail',USEREMAIL.value,(users)=>{
+
+                    if (users.UserEmail === USEREMAIL.value) {
+                        
+                        TOAST('User With Email Found');
+
+                        ORIGIN(ELEMENT,'Sign Up');
+
+                        return;
+
+                    }
+
+                    RANDOMCODE((code)=>{
+
+                        DEVICED((deviceData)=>{
+
+                            const USERSDATA={
+                                "UserName":USERNAME.value,
+                                "UserEmail":USEREMAIL.value,
+                                "UserPassword":USERPASSWORD.value,
+                                "Code":code,
+                                "ProfileImage":"",
+                                "Device":deviceData,
+                                "CreatedOn":new Date()
+                            }
+    
+                            JSONIFICATION(USERSDATA,(ConvertedData)=>{
+    
+                                POSTMAIL(USEREMAIL.value,'Movie Lander Account Creation',`Dear ${USERNAME.value}\n Your Verification Code is ${code}`,(response)=>{
+
+                                    STORE('local','UserData',ConvertedData);
+
+                                    STORE('local','Verification','On');
+
+                                    EMAILVERIFICATIONPAGE();
+
+                                    return;
+
+                                });
         
-    }
+                            });
 
-};
+                        });
 
-const USERCONTACT=()=>{
+                    });
 
-    DEJSON('','ContactUser',(data)=>{
+                });
+
+            })
+
+        });
+
+    });
+
+}
+
+const EMAILVERIFICATIONPAGE=()=>{
+
+    DEJSON('local','UserData',(data)=>{
 
         DISPLAY('',`
 
-            <header>
+            <img class='AppLogo' src='${APPLOGO}'/>
     
-                <img class='LeftedIcon' id='BackHome' src='${WHITEBACKICON}'/>
+            <p>Your Home Cinema</p>
     
-                 <img  id='SavedNumber' src='${WHITESAVEDICON}'/>
-
-                <img class='RightedIcon' src='${WHITESENDICON}'/>
-            
-            </header>
+            <input type='tel' maxlength='6'  id='UserEmail' class='Input' placeholder='Enter Verification Code' />
     
-            <div class='HomeDivHolder'>
+            <button class='SignInButton'>Verify</button>
     
-                <div class='ImageHolderCreation'>
-    
-                    <img class='CreateUserImage'  src='${data.ProfileContact||WHITEUSERICON}'/>
-                    
-                </div>
-
-                <button id='SaveNumberButton' >
-    
-                    <h3 class='SaveName'>${data.UserName}</h3>
-    
-                    <img class='SaveImage' src='${WHITEUSERICON}'/>
-    
-                </button>
-
-                <button id='SaveNumberButton' >
-    
-                    <h3 class='SaveName'>${data.FirstNumber}</h3>
-
-                    <img  id='CallFirstNumber' src='${WHITEPHONEICON}'/>
-
-                    <img id='SmsFirstNumber' class='SaveImage' src='${WHITESMSICON}'/>
-    
-                </button>
-
-                <button id='SaveNumberButton' >
-    
-                    <h3 class='SaveName'>${data.SecondNumber||'No Contact'}</h3>
-
-                    <img  id='CallSecondNumber' src='${WHITEPHONEICON}'/>
-
-                    <img id='SmsSecondNumber' class='SaveImage' src='${WHITESMSICON}'/>
-    
-                </button>
-
-                <button id='SaveNumberButton' >
-    
-                    <h3 class='SaveName'>${data.ThirdNumber||'No Contact'}</h3>
-
-                    <img id='CallThirdNumber'  src='${WHITEPHONEICON}'/>
-
-                    <img id='SmsThirdNumber' class='SaveImage' src='${WHITESMSICON}'/>
-    
-                </button>
-
-                <button id='SaveNumberButton' >
-    
-                    <h3 class='SaveName'>${data.FourthNumber||'No Contact'}</h3>
-
-                    <img id='CallFourthNumber'  src='${WHITEPHONEICON}'/>
-
-                    <img id='SmsFourthNumber' class='SaveImage'  src='${WHITESMSICON}'/>
-    
-                </button>
-
-                <button id='SaveNumberButton' >
-    
-                    <h3 class='SaveName'>${data.PersonalEmail||'No Email'}</h3>
-
-                    <img id='EmailPersonal' class='SaveImage' src='${WHITEGMAILICON}'/>
-    
-                </button>
-
-                <button id='SaveNumberButton' >
-    
-                    <h3 class='SaveName'>${data.WorkEmail||'No Email'}</h3>
-
-                    <img id='EmailWork' class='SaveImage' src='${WHITEGMAILICON}'/>
-    
-                </button>
-
-                <button id='SaveNumberButton' >
-    
-                    <h3 class='SaveName'>${data.Location||'No Place Added'}</h3>
-
-                    <img class='SaveImage' src='${WHITELOCATIONICON}'/>
-    
-                </button>
-
-                <textarea readonly id='AboutUser' placeholder='${data.Details||'No Details About Contact'}'></textarea>
-    
-                <button id='SaveNumberButton' onclick='UPDATECONTACTPAGE()' class='forestgreen'>
-    
-                    <h3 class='SaveName'>Edit</h3>
-    
-                    <img class='SaveImage' src='${WHITEPENCILICON}'/>
-    
-                </button>
-            
-            </div>
+            <button class='SignUpButton'>Cancel</button>
     
         `);
 
-        CLICKED('#BackHome',()=>{
+        const UserEmail=document.querySelector('#UserEmail');
 
-            if (sessionStorage.getItem('Navigation')) {
-                
-                SHAREDCONTACTSPAGE();
+        DECLARATION('.SignInButton',(ELEMENT)=>{
 
-                return;
+            CLICKED('.SignInButton',()=>{
 
-            }
+                if (!UserEmail.value) {
 
-            HomePage();
+                    TOAST('Enter Verification Code');
 
-        });
-
-        CONTACTSUPDATES();
-
-        CLICKED('#CallFirstNumber',()=>{CALL(data.FirstNumber)});
-
-        CLICKED('#SmsFirstNumber',()=>{SMS(data.FirstNumber)});
-
-        CLICKED('#CallSecondNumber',()=>{
-
-            if (!data.SecondNumber) {
-                
-                TOAST('No Number Added');
-
-                return;
-
-            }
-
-            CALL(data.SecondNumber)
-
-        });
-
-        CLICKED('#SmsSecondNumber',()=>{
-
-            if (!data.SecondNumber) {
-                
-                TOAST('No Number Added');
-
-                return;
-
-            }
-
-            SMS(data.SecondNumber)
-
-        });
-
-        CLICKED('#CallThirdNumber',()=>{
-
-            if (!data.ThirdNumber) {
-                
-                TOAST('No Number Added');
-
-                return;
-
-            }
-
-            CALL(data.ThirdNumber)
-
-        });
-
-        CLICKED('#SmsThirdNumber',()=>{
-
-            if (!data.ThirdNumber) {
-                
-                TOAST('No Number Added');
-
-                return;
-
-            }
-
-            SMS(data.ThirdNumber)
-
-        });
-
-        CLICKED('#CallFourthNumber',()=>{
-
-            if (!data.FourthNumber) {
-                
-                TOAST('No Number Added');
-
-                return;
-
-            }
-
-            CALL(data.FourthNumber)
-
-        });
-
-        CLICKED('#SmsFourthNumber',()=>{
-
-            if (!data.FourthNumber) {
-                
-                TOAST('No Number Added');
-
-                return;
-
-            }
-
-            SMS(data.FourthNumber)
-
-        });
-
-        CLICKED('#EmailPersonal',()=>{
-
-            if (!data.PersonalEmail) {
-                
-                TOAST('No Email Added');
-
-                return;
-
-            }
-
-            GMAIL(data.PersonalEmail)
-
-        });
-
-        CLICKED('#EmailWork',()=>{
-
-            if (!data.WorkEmail) {
-                
-                TOAST('No Email Added');
-
-                return;
-
-            }
-
-            GMAIL(data.WorkEmail)
-
-        });
-
-        CLICKED('#SavedNumber',()=>{CREATECONTACT(data.UserName,data.FirstNumber)});
-
-        CLICKED('.RightedIcon',()=>{SHAREDCONTACTS()});
-
-    })
-
-}
-
-const USERSDOWNLOAD=()=>{
-
-    if (localStorage.getItem('NetWork')) {
-
-        const DATA={
-    
-            "sheetName":"Users"
-    
-        };
-    
-        POSTPACKAGE(GETAPI,'',DATA,(data)=>{
-    
-            const NUMBERS={
-                "Name":"Users",
-                "Data":data
-            }
-    
-            STOREINDEXED('ConnectionsUsers','Users',NUMBERS,(dataone)=>{
-    
-                if (dataone === false ) {
-
-                    STORE('local','ContactsUpdated','Updated');
-
-                    return
-                        
-                } else {
-
-                    if (localStorage.getItem('ContactsUpdated')) {
-
-                        UPDATEINDEXED('ConnectionsUsers','Users',NUMBERS);
-
-                        return;
-                            
-                    }else{
-
-                        AUTORUN();
-
-                        return;
-                    }
- 
+                    return;
+                    
                 }
-    
-            })
-    
-        });
 
-        return;
+                if ( UserEmail.value !== data.Code  ) {
+
+                    TOAST('Enter Correct Verification Code');
+
+                    return;
+                    
+                }
+
+                LOADER(ELEMENT);
+
+                const HEADER=["UserName","UserEmail","Device","UserPassword","Code","CreatedOn","ProfileImage"];
+
+                const DATA=[data.UserName,data.UserEmail,data.Device,data.UserPassword,data.Code,data.CreatedOn,data.ProfileImage];
+
+                GETDATA(SHEETURL,'Users',(MyData)=>{
+
+                    FINDER(MyData,'UserEmail',data.UserEmail,(users)=>{
+
+                        if (users.UserEmail === data.UserEmail ) {
+
+                            TOAST('User With Email Found');
+
+                            ORIGIN(ELEMENT,'Verify');
+    
+                            return;
+
+                        }
+
+                        INSERTDATA(SHEETURL,'Users',HEADER,DATA,(response)=>{
+
+                            GETDATA(SHEETURL,'Users',(MyData)=>{
         
-    }
-
-};
-
-const SHAREDCONTACTS=()=>{
-
-    DISPLAY('',`
-
-        <header>
-    
-            <img class='LeftedIcon' onclick='USERCONTACT()' src='${WHITEBACKICON}'/>
-    
-            <h1>Share To</h1>
-            
-        </header>
-
-        <div class='HomeDivHolder' ></div>
+                                FINDER(MyData,'UserEmail',data.UserEmail,(users)=>{
         
-    `);
-
-    DECLARATION('.HomeDivHolder',(ELEMENT)=>{
-
-        LOADER(ELEMENT,'Loader');
-
-        GETINDEXED('ConnectionsUsers','Users',(data)=>{
-
-            CLEAR(ELEMENT);
-
-            REDUX(data,(element)=>{
-
-                REDUX(element.Data.reverse(),(elementOne)=>{
+                                    if (users.UserEmail === data.UserEmail ) {
+        
+                                        JSONIFICATION(users,(ConvertedData)=>{
+        
+                                            STORE('local','UserData',ConvertedData);
+        
+                                            DELETESTORAGE('local','Verification');
+        
+                                            HOMEPAGE();
     
-                    CREATEELEMENT('div','ContactsHolder',(ELEMENTED)=>{
-    
-                        DISPLAY(ELEMENTED,`
-    
-                            <img id='UserImage' class='LeftedIcon' src='${elementOne.UserImage||WHITEUSERICON}'/>
-                                
-                            <h1 class='ContactsName'>${elementOne.UserName}</h1>
-    
-                            <p class='FirstNumber' >${elementOne.UserEmail}</p>
-   
-                        `);
-    
-                        ADD(ELEMENT,ELEMENTED);
-
-                        EVENT(ELEMENTED,'click',()=>{
-
-                            if (localStorage.getItem('NetWork')) {
-
-                                LOADER(ELEMENTED);
-
-                                DEJSON('','ContactUser',(dedata)=>{
-
-                                    DEJSON('local','User',(MyInfo)=>{
-
-                                        const EDAD={
-                                            "sheetName":"SharedContacts",
-                                            "UserName": dedata.UserName,
-                                            "FirstNumber": dedata.FirstNumber,
-                                            "SecondNumber": dedata.SecondNumber,
-                                            "ThirdNumber": dedata.ThirdNumber,
-                                            "FourthNumber": dedata.FourthNumber,
-                                            "PersonalEmail": dedata.PersonalEmail,
-                                            "WorkEmail": dedata.WorkEmail,
-                                            "Location": dedata.Location,
-                                            "Details": dedata.Details,
-                                            "CreatedOn": dedata.CreatedOn,
-                                            "ContactID": dedata.ContactID,
-                                            "CreatedBy": dedata.CreatedBy,
-                                            "ProfileContact": dedata.ProfileContact,
-                                            "UserID": dedata.UserID,
-                                            "Reciver":elementOne.UserEmail,
-                                            "Sender":MyInfo.UserEmail,
-                                            "SharedOn":new Date()
-                                        }
-
-                                        POSTPACKAGE(localStorage.getItem('CreateUsersApi'),'',EDAD,(efe)=>{
-
-                                            POSTMAIL(elementOne.UserEmail,'Shared Contact',`You have A Shared Contact From ${MyInfo.UserName} On the Connection App \n Open the App to Check The Shared Contact `,(daes)=>{
-
-                                                USERCONTACT();
-
-                                                return;
-                                            
-                                            });
-
                                         })
 
-                                    });                                    
-
-                                });
- 
-                            } else {
-                                
-                                TOAST('Check Your Internet Connection');
-
-                                return;
-
-                            }
-
-                        })
-    
-                    });
-    
-                });
-
-            });
-
-        })
-
-    })
-
-}
-
-const SHAREDCONTACTSDOWNLOAD=()=>{
-
-    if (localStorage.getItem('NetWork')) {
-
-        DEJSON('local','User',(info)=>{
-
-            const DATA={
-    
-                "sheetName":"SharedContacts"
-            };
-        
-            POSTPACKAGE(GETAPI,'',DATA,(data)=>{
-        
-                const NUMBERS={
-                    "Name":"Contacts",
-                    "Data":data
-                }
-        
-                STOREINDEXED('ConnectionsShared','Contacts',NUMBERS,(dataone)=>{
-        
-                    if (dataone === true ) {
-
-                        STORE('local','ContactsUpdated','Updated');
-
-                        return;
-                            
-                    } else {
-
-                        if (localStorage.getItem('ContactsUpdated')) {
-
-                            UPDATEINDEXED('ConnectionsShared','Contacts',NUMBERS);
-
-                            return;
-                                
-                        }else{
-
-                            AUTORUN();
-
-                            return;
-                        }
-    
-                    }
-                })
-        
-            });
-    
-        })
-
-        return;
-        
-    }
-
-}
-
-const SHAREDCONTACTSPAGE=()=>{
-
-    DISPLAY('',`
-
-        <header>
-    
-            <img class='LeftedIcon' onclick='HomePage()' src='${WHITEBACKICON}'/>
-            
-            <h3 class='ContactUserName'>Shared Contacts</h3>
-
-        </header>
-
-        <div class='HomeDivHolder'></div>
-        
-    `);
-
-    DECLARATION('.HomeDivHolder',(ELEMENT)=>{
-
-        DEJSON('local','User',(Mydata)=>{
-
-            LOADER(ELEMENT,'Loader');
-
-            GETINDEXED('ConnectionsShared','Contacts',(data)=>{
-
-                CLEAR(ELEMENT);
-        
-                REDUX(data,(element)=>{
-    
-                    REDUX(element.Data.reverse(),(elementOne)=>{
-
-                        if (elementOne.Reciver === Mydata.UserEmail ) {
-
-                            CREATEELEMENT('div','ContactsHolder',(ELEMENTED)=>{
-        
-                                DISPLAY(ELEMENTED,`
-            
-                                    <img id='UserImage' class='LeftedIcon' src='${elementOne.ProfileContact||WHITEUSERICON}'/>
-                                        
-                                    <h1 class='ContactsName'>${elementOne.UserName}</h1>
-            
-                                    <p class='FirstNumber' >${elementOne.FirstNumber}</p>
-            
-                                `);
-            
-                                ADD(ELEMENT,ELEMENTED);
-        
-                                EVENT(ELEMENTED,'click',()=>{
-        
-                                    JSONIFICATION(elementOne,(dara)=>{
-        
-                                        STORE('','ContactUser',dara);
-
-                                        STORE('','Navigation','Shared');
-        
-                                        USERCONTACT();
-
                                         return;
+         
+                                    }
         
-                                    })
+                                    TOAST('Something Went Wrong ,Try Again');
         
-                                })
-            
-                            });
-                            
-                        } 
+                                    ORIGIN(ELEMENT,'Verify');
         
+                                    return;
+        
+                                });
+        
+                            })
+        
+                        })
+
                     });
-    
-                });
-    
-            })
+
+                })
+                
+            });
 
         });
 
+        CLICKED('.SignUpButton',()=>{
+
+            DELETESTORAGE('local','UserData');
+
+            DELETESTORAGE('local','Verification');
+
+            LOGINPAGE();
+
+        });
+
+    });
+
+}
+
+const HOMEPAGE=()=>{
+
+    DISPLAY('',`
+
+        <div class='HomeDiv'>
+
+            <div id='TrendingMoviesDiv' class='AdvertDiv'></div>
+
+            <header class='DataHeader'>
+
+                <p class='Titles'>Animations</p>
+
+                <img class='MoreIcon' id='MoreAnimations' src='${WHITERIGHTBACKICON}'/>
+
+            </header>
+
+            <div id='HomeAnimationDiv'  class='AdvertDiv'></div>
+
+            <header class='DataHeader'>
+
+                <p class='Titles'>Movies</p>
+
+                <img class='MoreIcon' id='MoreMovies' src='${WHITERIGHTBACKICON}'/>
+
+            </header>
+
+            <div id='HomeMoviesDiv' class='AdvertDiv'></div>
+
+            <div id='BestMoviesDiv' class='AdvertDiv'></div>
+            
+            <header class='DataHeader'>
+
+                <p class='Titles'>Horrors</p>
+
+                <img class='MoreIcon' id='MoreHorrors' src='${WHITERIGHTBACKICON}'/>
+
+            </header>
+
+            <div id='HomeHorrorDiv'  class='AdvertDiv'></div>
+
+            <header class='DataHeader'>
+
+                <p class='Titles'>Romance</p>
+
+                <img class='MoreIcon' id='MoreRomance' src='${WHITERIGHTBACKICON}'/>
+
+            </header>
+
+            <div id='HomeRomanceDiv' class='AdvertDiv'></div>
+
+            <div id='BestActionDiv'  class='AdvertDiv'></div>
+
+            <header class='DataHeader'>
+
+                <p class='Titles'>Nigerian</p>
+
+                <img class='MoreIcon' id='MoreNigerian' src='${WHITERIGHTBACKICON}'/>
+
+            </header>
+
+            <div id='HomeNigerianDiv' class='AdvertDiv'></div>
+
+            <header class='DataHeader'>
+
+                <p class='Titles'>Adventure</p>
+
+                <img class='MoreIcon' id='MoreAdventures' src='${WHITERIGHTBACKICON}'/>
+
+            </header>
+
+            <div id='HomeMarathonDiv' class='AdvertDiv'></div>
+
+            <div id='BestMarathonDiv' class='AdvertDiv'></div>
+
+            <br><br><br><br>
+        
+        </div>
+        
+        <footer id='RoundFooter' class='RoundFooter'>
+
+            <img src='${WHITEGRIDICON}'/>
+
+            <img src='${WHITESAVEDICON}'/>
+
+            <img onclick='USERACCOUNTPAGE()' src='${WHITEUSERHOLDERICON}'/>
+        
+        </footer>
+
+    `);
+
+    ADVERTSMOVIE();
+
+    ALLMOVIES('#HomeAnimationDiv','Animation');
+
+    ALLMOVIES('#HomeMoviesDiv','Action');
+
+    ALLMOVIES('#HomeRomanceDiv','Action');
+
+    ALLMOVIES('#HomeHorrorDiv','Action');
+
+    ALLMOVIES('#HomeNigerianDiv','Action');
+
+    ALLMOVIES('#HomeMarathonDiv','Action');
+
+    SINGLEMOVIES('#BestMoviesDiv','Animation');
+
+    SINGLEMOVIES('#BestMoviesDiv','Animation');
+
+    SINGLEMOVIES('#BestActionDiv','Action');
+
+    SINGLEMOVIES('#BestMarathonDiv','Animation');
+
+    CLICKED('#MoreAnimations',()=>{
+
+        MORESECTION('Animation');
+
+    });
+
+    CLICKED('#MoreMovies',()=>{
+
+        MORESECTION('Action');
+
+    });
+
+    CLICKED('#MoreHorrors',()=>{
+
+        MORESECTION('Action');
+
+    });
+
+    CLICKED('#MoreRomance',()=>{
+
+        MORESECTION('Action');
+
+    });
+
+    CLICKED('#MoreNigerian',()=>{
+
+        MORESECTION('Action');
+
+    });
+
+    CLICKED('#MoreAdventures',()=>{
+
+        MORESECTION('Action');
+
+    });
+
+}
+
+const ADVERTSMOVIE=()=>{
+
+    const TrendingMoviesDiv=document.querySelector('#TrendingMoviesDiv');
+
+    GETINDEXED('ComposeMovies','Movies',(data)=>{
+
+        REDUX(data,(Element)=>{
+
+            SINGLESHUFFLE(Element.Data,(element)=>{
+
+                DISPLAY(TrendingMoviesDiv,`
+
+                    <img class='AdsImage' src='${element.Image}'/>
+
+                    <img class='AdDownloadIcon' src='${WHITEDOWNLOADICON}'/>
+
+                    <p class='AdsMovieName'>${element.MovieName}</p>
+       
+                `);
+
+                EVENT(TrendingMoviesDiv,'click',()=>{
+
+                    MOVIESPAGE(element);
+
+                })
+
+            });
+
+        });
+
+    });
+
+}
+
+const MOVIESDATA=()=>{
+
+    GETDATA(SHEETURL,'Movies',(data)=>{
+
+        const DATA={
+            "Name":"MovieLander",
+            "Data":data
+        };
+
+        STOREINDEXED('ComposeMovies','Movies',DATA,(response)=>{
+
+            if (response === true ) {
+
+                STORE('local','Updated','On');
+
+                HOMEPAGE();
+                
+                return;
+
+            }
+
+            if (response === false  ) {
+
+                if (localStorage.getItem('Updated')) {
+
+                    UPDATEDATA('ComposeMovies','Movies',DATA);
+
+                    return;
+                    
+                } else {
+
+                    AUTORUN();
+
+                    return;
+                    
+                }
+                
+            }
+
+        })
+
     })
+
+}
+
+const ALLMOVIES=(DIVS,SECTION)=>{
+
+    const TrendingMoviesDiv=document.querySelector(DIVS);
+
+    GETINDEXED('ComposeMovies','Movies',(data)=>{
+
+        CLEAR(TrendingMoviesDiv);
+
+        REDUX(data,(Element)=>{
+
+            REDUX(Element.Data,(element)=>{
+
+                if (element.Catergory === SECTION ) {
+
+                    CREATEELEMENT('div','HomeMiniDivs',(ELEMENT)=>{
+
+                        DISPLAY(ELEMENT,`
+
+                            <img class='MiniImage' src='${element.Image}'/>
+                            
+                        `);
+
+                        ADD(TrendingMoviesDiv,ELEMENT);
+
+                        EVENT(ELEMENT,'click',()=>{
+
+                            MOVIESPAGE(element);
+
+                        })
+
+                        return;
+
+                    });
+                    
+                }
+
+            });
+
+        });
+
+    });
+
+}
+
+const SINGLEMOVIES=(DIV,SECTION)=>{
+
+    const TrendingMoviesDiv=document.querySelector(DIV);
+
+    GETINDEXED('ComposeMovies','Movies',(data)=>{
+
+        REDUX(data,(Element)=>{
+
+            DATASINGLESHUFFLE(Element.Data,'Catergory',SECTION,(element)=>{
+
+                DISPLAY(TrendingMoviesDiv,`
+
+                    <img class='AdsImage' src='${element.Image}'/>
+
+                    <img class='AdDownloadIcon' src='${WHITEDOWNLOADICON}'/>
+
+                    <p class='AdsMovieName'>${element.MovieName}</p>
+       
+                `);
+
+                EVENT(TrendingMoviesDiv,'click',()=>{
+
+                    MOVIESPAGE(element);
+
+                })
+
+                return;
+
+            });
+
+        });
+
+    });
 
 }
 
 const USERACCOUNTPAGE=()=>{
 
-    DEJSON('local','User',(data)=>{
+    DISPLAY('',`
 
-        DISPLAY('',`
-            
-            <header>
+        <header>
+
+            <img onclick='HOMEPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
+
+            <h3 class='ProfileHouse' >My Profile</h3>
+        
+        </header>
+
+    `);
+
+}
+
+const MORESECTION=(SECTION)=>{
+
+    DISPLAY('',`
+
+        <div class='MoreDivs'></div>
+
+        <header>
+
+            <img onclick='HOMEPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
+
+            <h3 class='ProfileHouse' >${SECTION}</h3>
+        
+        </header>
+        
+    `);
+
+    DECLARATION('.MoreDivs',(ELEMENT)=>{
+
+        GETINDEXED('ComposeMovies','Movies',(data)=>{
+
+            CLEAR(ELEMENT);
     
-                <img class='LeftedIcon' onclick='HomePage()' src='${WHITEBACKICON}'/>
+            REDUX(data,(Element)=>{
     
-                <h3 class='ContactUserName'>${data.UserName}</h3>
-            
-            </header>
-
-            <div class='HomeDivHolder'>
-
-            
-                <div class='ImageHolderCreation'>
-        
-                    <img class='CreateUserImage'  src='${data.UserImage||WHITEUSERICON}'/>
-                        
-                </div>
-
-
-                <button id='SaveNumberButton' >
-        
-                    <h3 class='SaveName'>${data.UserName}</h3>
-        
-                    <img class='SaveImage' src='${WHITEUSERICON}'/>
-        
-                </button>
-
-                <button id='SaveNumberButton' >
-        
-                    <h3 class='SaveName'>${data.UserEmail}</h3>
-        
-                    <img class='SaveImage' src='${WHITEGMAILICON}'/>
-        
-                </button>
-
-                <button id='SaveNumberButton' >
-        
-                    <h3 class='SaveName'>${data.Location ||'Add Location' }</h3>
-        
-                    <img class='SaveImage' src='${WHITELOCATIONICON}'/>
-        
-                </button>
-
-                <div class='Details'>${data.AboutUser}</div>
-
-                <button id='SaveNumberButton' class='forestgreen'>
+                REDUX(Element.Data,(element)=>{
     
-                    <h3 class='SaveName'>Update</h3>
+                    if (element.Catergory === SECTION ) {
     
-                    <img class='SaveImage' src='${WHITEPENCILICON}'/>
+                        CREATEELEMENT('div','MoreMiniDivs',(ELEMENTED)=>{
     
-                </button>
-            
-            </div>
+                            DISPLAY(ELEMENTED,`
     
-        `);
-
-        CLICKED('.forestgreen',()=>{
-
-            DISPLAY('',`
-
-                <header>
-        
-                    <img class='LeftedIcon' onclick='USERACCOUNTPAGE()' src='${WHITEBACKICON}'/>
-        
-                    <h3 class='ContactUserName'>Connections</h3>
-                
-                </header>
-        
-                <div class='HomeDivHolder'>
-        
-                    <div class='ImageHolderCreation'>
-        
-                        <img class='CreateUserImage'  src='${WHITEUSERICON}'/>
-                        
-                    </div>
-        
-                    <p class='AddUser'>Add a Photo</p>
-        
-                    <input type='text' id='UserName' placeholder=' User Name' >
-        
-                    <input type='text' id='Location' placeholder=' Current Location' >
-        
-                    <textarea id='AboutUser' placeholder='Who Are You?'></textarea>
-        
-                    <button id='SaveNumberButton' class='forestgreen'>
-        
-                        <h3 class='SaveName'>Save</h3>
-        
-                        <img class='SaveImage' src='${WHITESAVEICON}'/>
-        
-                    </button>
-                
-                </div>
-        
-            `);
-
-            CLICKED('.AddUser',()=>{IMAGEPICKER('.CreateUserImage',(data)=>{STORE('','UserImage',data)})});
-
-            DECLARATION('.forestgreen',(ELEMENT)=>{
-
-                const UserName=document.querySelector('#UserName');
-                const Location=document.querySelector('#Location');
-                const AboutUser=document.querySelector('#AboutUser');
-
-                EVENT(ELEMENT,'click',()=>{
-            
-                    if (UserName.value || Location.value ||AboutUser.value || sessionStorage.getItem('UserImage') ) {
-
-                        if (localStorage.getItem('NetWork')) {
-
-                            const USERDATA={
-                                "sheetName":"Users",
-                                "CreatedOn": new Date(),
-                                "AboutUser": AboutUser.value || data.AboutUser,
-                                "Location": Location.value || data.Location,
-                                "UserImage": sessionStorage.getItem('UserImage')||data.UserImage,
-                                "UserID": data.UserID,
-                                "UserName":UserName.value || data.UserName,
-                            }
-                      
-                            LOADER(ELEMENT);
-            
-                            POSTPACKAGE(localStorage.getItem('UpdateUserApi'),'',USERDATA,(reso)=>{
-
-                                DELETESTORAGE('','UserImage');
-
-                                FINDER(reso,'UserEmail',data.UserEmail,(users)=>{
-
-                                    if (users.UserEmail === data.UserEmail ) {
-
-                                        JSONIFICATION(users,(info)=>{
-                        
-                                            STORE('local','User',info);
-                        
-                                            USERACCOUNTPAGE();
-                        
-                                            return;
-                        
-                                        })
-                                        
-                                    } else {
-                                        
-                                        DELETESTORAGE('local','User');RELOADPAGE();
-
-                                        return;
-
-                                    }
-
-                                });
+                                <img class='MiniImage' src='${element.Image}'/>
                                 
+                            `);
+    
+                            ADD(ELEMENT,ELEMENTED);
+
+                            EVENT(ELEMENTED,'click',()=>{
+
+                                MOVIESPAGE(element,SECTION);
+            
                             })
-            
-                        } else {
-                            
-                            TOAST('Check Your Internet Connection');
-            
-                        }
+    
+                            return;
+    
+                        });
                         
-                    }else{
-
-                        TOAST('Fill Any Part');
-
                     }
-        
     
                 });
-        
+    
             });
-
+    
         });
+
+    })
+
+}
+
+const MOVIESPAGE=(data,SECTION)=>{
+
+    DISPLAY('',`
+
+        <header>
+
+            <img  class='BackIcon' src='${WHITEBACKICON}'/>
+
+            <h3 class='ProfileHouse' >${data.MovieName}</h3>
+        
+        </header>
+
+        <div class='MoreDivs'>
+
+            <div class='DetailsHolder'>
+
+                <img  class='MoviesPageImage' src='${data.Image}'/>
+
+                <img class='PlayIcon' src='${WHITEPLAYICON}'/>
+
+                <div class='DataHolder'>
+
+                    <h1 class='MoviePageCatergory' >${data.Catergory}</h1>
+
+                    <img class='PaidImage' src='${WHITELOCKICON}'/>
+
+                </div>
+            
+            </div>
+
+            <div class='MovieDataImages'>
+
+                <img class='MoviePageImages' src='${data.Image}'/>
+
+                <img class='MoviePageImages' src='${data.Image}'/>
+
+                <img class='MoviePageImages' src='${data.Image}'/>
+            
+            </div>
+
+            <div class='MovieDetails'></div>
+
+            <button class='WatchButton'>Watch</button>
+        
+        </div>
+
+    `);
+
+    CLICKED('.BackIcon',()=>{
+
+        if (!SECTION) {
+
+            HOMEPAGE();
+
+        } else {
+
+            MORESECTION(SECTION,SECTION); 
+
+        }
+
+    });
+
+    CLICKED('.PlayIcon',()=>{
+
+        TRAILORPAGE(data,SECTION)
+
+    })
+
+}
+
+const TRAILORPAGE=(data,SECTION)=>{
+
+    console.log(data)
+
+    DISPLAY('',`
+
+        <header>
+
+            <img  class='BackIcon' src='${WHITEBACKICON}'/>
+
+            <h3 class='ProfileHouse' >${data.MovieName}</h3>
+        
+        </header>
+
+        <video class='TrailorPlayer' autoplay controls src=${data.TrailorVideo}></video>
+        
+    `);
+
+    CLICKED('.BackIcon',()=>{
+
+        MOVIESPAGE(data,SECTION);
 
     });
 
 }
-
-const UPDATECONTACTPAGE=()=>{
-
-    DEJSON('','ContactUser',(data)=>{
-
-        DISPLAY('',`
-
-            <header>
-    
-                <img class='LeftedIcon' onclick='USERCONTACT()' src='${WHITEBACKICON}'/>
-    
-                <h3 class='UserAppName'>${data.UserName}</h3>
-            
-            </header>
-    
-            <div class='HomeDivHolder'>
-    
-                <div class='ImageHolderCreation'>
-    
-                    <img class='CreateUserImage'  src='${data.ProfileContact||WHITEUSERICON}'/>
-                    
-                </div>
-    
-                <p class='AddUser'>Add a Photo</p>
-    
-                <input type='text' id='UserName' placeholder='${data.UserName}' >
-    
-                <input type='tel' id='FirstNumber' placeholder='${data.FirstNumber}' >
-    
-                <input type='tel' id='SecondNumber' placeholder=' ${data.SecondNumber}' >
-    
-                <input type='tel' id='ThirdNumber' placeholder='${data.ThirdNumber}' >
-    
-                <input type='tel' id='FourthNumber' placeholder='${data.FourthNumber}' >
-    
-                <input type='email' id='PersonalEmail' placeholder='${data.PersonalEmail}' >
-    
-                <input type='email' id='WorkEmail' placeholder='${data.WorkEmail}' >
-    
-                <input type='text' id='Location' placeholder='${data.Location}' >
-    
-                <textarea id='AboutUser' placeholder='${data.Details}'></textarea>
-    
-                <button id='SaveNumberButton' class='forestgreen'>
-    
-                    <h3 class='SaveName'>Update</h3>
-    
-                    <img class='SaveImage' src='${WHITESAVEICON}'/>
-    
-                </button>
-            
-            </div>
-    
-        `);
-    
-        const UserName=document.querySelector('#UserName');
-        const FirstNumber=document.querySelector('#FirstNumber');
-        const SecondNumber=document.querySelector('#SecondNumber');
-        const ThirdNumber=document.querySelector('#ThirdNumber');
-        const FourthNumber=document.querySelector('#FourthNumber');
-        const PersonalEmail=document.querySelector('#PersonalEmail');
-        const WorkEmail=document.querySelector('#WorkEmail');
-        const Location=document.querySelector('#Location');
-        const AboutUser=document.querySelector('#AboutUser');
-    
-        CLICKED('.AddUser',()=>{IMAGEPICKER('.CreateUserImage',(data)=>{STORE('','UserImage',data)})});
-    
-        DECLARATION('.forestgreen',(ELEMENT)=>{
-    
-            EVENT(ELEMENT,'click',()=>{
-    
-                if (!UserName.value) {
-    
-                    TOAST('Enter Contact Name');
-    
-                    return;
-                }
-    
-                if (!FirstNumber.value) {
-    
-                    TOAST('Enter Contact Name');
-    
-                    return;
-                }
-    
-                if (localStorage.getItem('NetWork')) {
-    
-                    DEJSON('local','User',(data)=>{
-    
-                        const USERDATA={
-                            "sheetName":data.UserDataBase,
-                            "ContactID": Date.now(),
-                            "CreatedBy": data.UserID,
-                            "CreatedOn": new Date(),
-                            "Details": AboutUser.value,
-                            "FirstNumber": FirstNumber.value,
-                            "FourthNumber": FourthNumber.value,
-                            "Location": Location.value,
-                            "PersonalEmail": PersonalEmail.value,
-                            "ProfileContact": sessionStorage.getItem('UserImage'),
-                            "SecondNumber": SecondNumber.value,
-                            "ThirdNumber": ThirdNumber.value,
-                            "UserID": Date.now(),
-                            "UserName": UserName.value,
-                            "WorkEmail": WorkEmail.value
-                        }
-        
-                        const DATA={
-            
-                            "sheetName":data.UserDataBase
-                    
-                        };
-        
-                        LOADER(ELEMENT);
-        
-                        POSTPACKAGE(localStorage.getItem('CreateUsersApi'),'',USERDATA,(reso)=>{
-        
-                            DELETESTORAGE('','UserImage');
-        
-                            POSTPACKAGE(GETAPI,'',DATA,(data)=>{
-                
-                                const NUMBERS={
-                                    "Name":"Contacts",
-                                    "Data":data
-                                }
-                        
-                                STOREINDEXED('Connections','Contacts',NUMBERS,(dataone)=>{
-                        
-                                    if (dataone === true ) {
-                        
-                                        STORE('local','ContactsUpdated','Updated');
-                        
-                                        HomePage();
-                                        
-                                    }else{
-                        
-                                        if (localStorage.getItem('ContactsUpdated')) {
-                                            
-                                            UPDATEINDEXED('Connections','Contacts',NUMBERS);
-        
-                                            HomePage();
-                        
-                                        } else {
-                        
-                                            AUTORUN();
-                        
-                                        }
-                        
-                                    }
-                        
-                                })
-                        
-                            });
-        
-                        })
-        
-                    })    
-                    
-                } else {
-                    
-                    TOAST('Check Your Internet Connection')
-    
-                }
-    
-            });
-    
-        });
-
-    });
-
-};

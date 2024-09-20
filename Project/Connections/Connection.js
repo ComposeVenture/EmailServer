@@ -216,23 +216,96 @@ const PAGESDOWNLOAD=()=>{
 
     if (localStorage.getItem('NetWork')) {
 
-        const DATA={
+        STORE('local','CreateUsersApi','https://script.google.com/macros/s/AKfycbwOAL-UJYEqv2cEgcemcUCNvJuMPHZRlphzEYBQtzBqTyG9fg8yowDqhc-j7pWQEHp1/exec');
 
-            "sheetName":"Connections"
+        STORE('local','CreateDataBase','https://script.google.com/macros/s/AKfycbzMweBZtxHl7eR7TNU8UKHRNK4ca6uJOVuMeAu2WdxeQwpk1eOGJzZ59sw4Xm71gwpE/exec');
     
-        };
+        STORE('local','UpdateUserApi','https://script.google.com/macros/s/AKfycbxM3V71p9mrkOXSTGpqLC9dqf7341PNYdI7kxDheHmf4VdqH4OBTR1VqLD2p6GmU2Hs/exec');
     
-        POSTPACKAGE(GETAPI,'',DATA,(data)=>{
-    
-            REDUX(data,(element)=>{
-    
-                STORE('local',element.Name,element.Link);
-    
-            });
-    
-        });
+        STORE('local','PrivacyPolicy',`<p><strong>Effective Date:</strong> 8th August 2024</p>
 
-        return;
+<p><strong>Composition</strong> ("we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application "Composition" (the "App"). Please read this policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the App.</p>
+
+<h2>1. Information We Collect</h2>
+
+<h3>a. Personal Information</h3>
+<p>When you use the App, we may collect the following types of personal information:</p>
+<ul>
+    <li><strong>Contact Information:</strong> Names, phone numbers, email addresses, and any other information you provide to us through your contacts.</li>
+    <li><strong>Account Information:</strong> Username, password, and other information related to your account.</li>
+</ul>
+
+<h3>b. Usage Data</h3>
+<p>We may collect information about how you interact with the App, including:</p>
+<ul>
+    <li><strong>Log Data:</strong> IP address, device type, operating system, and the time and date of your use of the App.</li>
+    <li><strong>Usage Information:</strong> Details of your interactions with the App, such as features used and the duration of use.</li>
+</ul>
+
+<h3>c. Device Information</h3>
+<p>We may collect information about your device, including:</p>
+<ul>
+    <li><strong>Device Information:</strong> Device ID, hardware model, and operating system version.</li>
+    <li><strong>Location Information:</strong> Geolocation data, if you have granted permission for location access.</li>
+</ul>
+
+<h2>2. How We Use Your Information</h2>
+<p>We use your information for the following purposes:</p>
+<ul>
+    <li><strong>To Provide and Improve the App:</strong> To deliver the services you request and improve the functionality and performance of the App.</li>
+    <li><strong>To Communicate With You:</strong> To send you updates, notifications, and other information related to your account or the App.</li>
+    <li><strong>To Analyze and Monitor Usage:</strong> To understand how users interact with the App and to enhance user experience.</li>
+    <li><strong>To Ensure Security:</strong> To detect, prevent, and address technical issues, fraud, and abuse.</li>
+</ul>
+
+<h2>3. Sharing Your Information</h2>
+<p>We do not sell, trade, or otherwise transfer your personal information to outside parties except as described below:</p>
+<ul>
+    <li><strong>Service Providers:</strong> We may share your information with third-party service providers who assist us in operating the App and providing services to you. These providers are obligated to protect your information and use it only for the purposes we specify.</li>
+    <li><strong>Legal Requirements:</strong> We may disclose your information if required by law or to respond to legal processes or requests from governmental authorities.</li>
+    <li><strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale of assets, your information may be transferred to the acquiring entity.</li>
+</ul>
+
+<h2>4. Data Security</h2>
+<p>We implement industry-standard security measures to protect your personal information from unauthorized access, use, or disclosure. However, no method of transmission over the internet or electronic storage is completely secure, and we cannot guarantee absolute security.</p>
+
+<h2>5. Your Choices</h2>
+
+<h3>a. Access and Correction</h3>
+<p>You may access and update your personal information through the App's settings or by contacting us at <a href="mailto:composeventures@gmail.com">composeventures@gmail.com</a>.</p>
+
+<h3>b. Deletion</h3>
+<p>You can request the deletion of your account and personal information by contacting us at <a href="mailto:composeventures@gmail.com">composeventures@gmail.com</a>. Please note that we may retain certain information as required by law or for legitimate business purposes.</p>
+
+<h3>c. Opt-Out</h3>
+<p>You may opt out of receiving promotional communications from us by following the unsubscribe instructions provided in those communications.</p>
+
+<h2>6. Children's Privacy</h2>
+<p>The App is not intended for use by individuals under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected such information, we will take steps to delete it.</p>
+
+<h2>7. Changes to This Privacy Policy</h2>
+<p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date. Your continued use of the App after any changes constitutes your acceptance of the revised Privacy Policy.</p>
+
+<h2>8. Contact Us</h2>
+<p>If you have any questions or concerns about this Privacy Policy or our practices, please contact us at:</p>
+<p><strong>Email:</strong> <a href="mailto:composeventures@gmail.com">composeventures@gmail.com</a></p>
+`);
+    
+        const FUNCTIONSAPI='https://composeventure.github.io/SERVER/Project/Connections/Connection.js';
+    
+        GETPACKAGE(FUNCTIONSAPI,'cors',(data)=>{
+
+            STORE('local','Functions',data);
+
+        })
+
+        const STYLESAPI='https://composeventure.github.io/SERVER/Project/Connections/Connection.css';
+    
+        GETPACKAGE(STYLESAPI,'cors',(data)=>{
+
+            STORE('local','Styles',data);
+
+        })
         
     }
 

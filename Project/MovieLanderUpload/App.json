@@ -1,0 +1,10 @@
+[
+    {
+        "Name":"Movie Lander Upload",
+        "PacakageName":"com.composeventure.compose_cinematic_uploader",
+        "Color":"#000000",
+        "LinksFuntions":"https://composeventure.github.io/SERVER/Project/MovieLanderUpload/MovieLanderUploader.js",
+        "LinksStyles":"https://composeventure.github.io/SERVER/Project/MovieLanderUpload/MovieLanderUploader.css",
+        "Version":"01"
+    }
+]
