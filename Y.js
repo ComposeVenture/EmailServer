@@ -811,8 +811,6 @@ const MOVIESPAGE=(data,SECTION)=>{
 
 const TRAILORPAGE=(data,SECTION)=>{
 
-    console.log(data)
-
     DISPLAY('',`
 
         <header>
