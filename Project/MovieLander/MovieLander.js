@@ -1,16 +1,21 @@
-const SHEETURL='https://docs.google.com/spreadsheets/d/1IbSB2xrDMuUy56NvR7a7_nGScEP3iV_8LjNavN8EGHY/edit';
+const SHEETURIL='https://docs.google.com/spreadsheets/d/1IbSB2xrDMuUy56NvR7a7_nGScEP3iV_8LjNavN8EGHY/edit';
 
 const AUTORUN=()=>{
+
+    STORE('local','Updates','On')
    
     if (localStorage.getItem('UserData') && !localStorage.getItem('Verification') ) {
         
         HOMEPAGE();
+
+        /*
 
         if (localStorage.getItem('NetWork')) {
 
             MOVIESDATA();
 
         }
+        */
 
         return;
 
@@ -76,7 +81,7 @@ const LOGINPAGE=()=>{
 
             LOADER(ELEMENT);
 
-            GETDATA(SHEETURL,'Users',(data)=>{
+            GETDATA(SHEETURIL,'Users',(data)=>{
 
                 FINDER(data,'UserEmail',UserEmail.value,(users)=>{
 
@@ -180,7 +185,7 @@ const CREATEACCOUNTPAGE=()=>{
 
             LOADER(ELEMENT);
 
-            GETDATA(SHEETURL,'Users',(data)=>{
+            GETDATA(SHEETURIL,'Users',(data)=>{
 
                 FINDER(data,'UserEmail',USEREMAIL.value,(users)=>{
 
@@ -284,7 +289,7 @@ const EMAILVERIFICATIONPAGE=()=>{
 
                 const DATA=[data.UserName,data.UserEmail,data.Device,data.UserPassword,data.Code,data.CreatedOn,data.ProfileImage];
 
-                GETDATA(SHEETURL,'Users',(MyData)=>{
+                GETDATA(SHEETURIL,'Users',(MyData)=>{
 
                     FINDER(MyData,'UserEmail',data.UserEmail,(users)=>{
 
@@ -540,7 +545,7 @@ const ADVERTSMOVIE=()=>{
 
 const MOVIESDATA=()=>{
 
-    GETDATA(SHEETURL,'Movies',(data)=>{
+    GETDATA(SHEETURIL,'Movies',(data)=>{
 
         const DATA={
             "Name":"MovieLander",
