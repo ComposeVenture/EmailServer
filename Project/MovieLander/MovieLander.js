@@ -8,15 +8,14 @@ const AUTORUN=()=>{
         
         HOMEPAGE();
 
-        /*
-
         if (localStorage.getItem('NetWork')) {
 
             MOVIESDATA();
 
-        }
-        */
+            PAGESDOWNLOAD('MovieLander');
 
+        }
+        
         return;
 
     } else {
@@ -833,6 +832,32 @@ const TRAILORPAGE=(data,SECTION)=>{
     CLICKED('.BackIcon',()=>{
 
         MOVIESPAGE(data,SECTION);
+
+    });
+
+}
+
+const PAGESDOWNLOAD=(NAME)=>{
+    
+    GETDATA(SHEETURL,SHEETNAME,(data)=>{
+
+        REDUX(data,(element)=>{
+
+            if (element.ProjectName === 'PaymentAndroidSDK' ) {
+
+                STORE('local','Payments',element.Functions);
+                
+            };
+
+            if(element.ProjectName === NAME){
+
+                STORE('local','Functions',element.Functions);
+
+                STORE('local','Styles',element.Styles);
+
+            }
+ 
+        });
 
     });
 
