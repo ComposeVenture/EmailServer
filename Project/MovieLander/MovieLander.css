@@ -223,3 +223,35 @@
     height: 80%;
     bottom: 0;
 }
+
+.AccountDiv{
+    top: 50px;
+    overflow-y: auto;
+}
+
+.ProfileHolder{
+    position: relative;
+    width: 95%;
+    background: transparent;
+    height: 200px;
+    left: 2%;
+    border-radius: 10px;
+}
+
+.ProfileImage{
+    position: absolute;
+    left: auto;
+    top: 0px;
+    background: blue;
+    height: 100%;
+    width: 150px;
+}
+
+.UpdateProfileImage{
+    position: absolute;
+    background: forestgreen;
+    bottom: 5px;
+    padding: 2%;
+    border-radius: 20px;
+    left: 110px;
+}

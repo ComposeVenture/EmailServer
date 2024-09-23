@@ -7,15 +7,7 @@ const AUTORUN=()=>{
     if (localStorage.getItem('UserData') && !localStorage.getItem('Verification') ) {
         
         HOMEPAGE();
-
-        if (localStorage.getItem('NetWork')) {
-
-            MOVIESDATA();
-
-            PAGESDOWNLOAD('MovieLander');
-
-        }
-        
+ 
         return;
 
     } else {
@@ -448,6 +440,16 @@ const HOMEPAGE=()=>{
 
     `);
 
+     if (localStorage.getItem('NetWork')) {
+
+        MOVIESDATA();
+
+        PAGESDOWNLOAD('MovieLander');
+
+        UPDATEUSERSTATUS();
+
+    }
+
     ADVERTSMOVIE();
 
     ALLMOVIES('#HomeAnimationDiv','Animation');
@@ -669,19 +671,116 @@ const SINGLEMOVIES=(DIV,SECTION)=>{
 
 const USERACCOUNTPAGE=()=>{
 
-    DISPLAY('',`
+    DEJSON('local','UserData',(data)=>{
 
-        <header>
+        console.log(data)
 
-            <img onclick='HOMEPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
+        DISPLAY('',`
 
-            <h3 class='ProfileHouse' >My Profile</h3>
+            <header>
+    
+                <img onclick='HOMEPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
+    
+                <h3 class='ProfileHouse' >My Profile</h3>
+            
+            </header>
+
+            <div class='AccountDiv'>
+
+                <div class='ProfileHolder'>
+
+                    <img class='ProfileImage' src='${data.ProfileImage || APPLOGO }'/>
+
+                    <img class='UpdateProfileImage' src='${WHITEPOSTICON}'/>
+                
+                </div>
+
+            </div>
+    
+        `);
+
+        CLICKED('.UpdateProfileImage',()=>{
+
+            IMAGEPICKER('.ProfileImage',(Imaged)=>{
+
+                const DATA=[data.UserName,data.UserEmail,data.Device,data.UserPassword,data.Code,data.CreatedOn,Imaged];
+
+                UPDATEDATA(SHEETURIL,'Users',data.ID,DATA,(data)=>{
+
+                    GETDATA(SHEETURIL,'Users',(datata)=>{
+
+                        FINDER(datata,'UserEmail',data.UserEmail,(users)=>{
         
-        </header>
+                            if (users.UserEmail === data.UserEmail) {
 
-    `);
+                                JSONIFICATION(users,(ConvertedData)=>{
+
+                                    STORE('local','UserData',ConvertedData);
+            
+                                });
+
+                                return;
+                                
+                            }else{
+        
+                                DELETESTORAGE('local','UserData');
+
+                                RELOADPAGE();
+        
+                                return;
+        
+                            }
+        
+                        });
+        
+                    });
+
+                });
+
+            })
+
+        });
+
+    });
 
 }
+
+const UPDATEUSERSTATUS=()=>{
+
+    DEJSON('local','UserData',(datata)=>{
+
+        GETDATA(SHEETURIL,'Users',(data)=>{
+
+            FINDER(data,'UserEmail',datata.UserEmail,(users)=>{
+    
+                if (users.UserEmail === datata.UserEmail) {
+
+                    JSONIFICATION(users,(ConvertedData)=>{
+
+                        STORE('local','UserData',ConvertedData);
+
+                    });
+    
+                    return;
+                    
+                }else{
+    
+                    DELETESTORAGE('local','UserData');
+    
+                    RELOADPAGE();
+    
+                    return;
+    
+                };
+    
+            });
+    
+        });
+
+    })
+
+
+};
 
 const MORESECTION=(SECTION)=>{
 
@@ -741,7 +840,7 @@ const MORESECTION=(SECTION)=>{
 
     })
 
-}
+};
 
 const MOVIESPAGE=(data,SECTION)=>{
 
@@ -801,7 +900,7 @@ const MOVIESPAGE=(data,SECTION)=>{
 
             MORESECTION(SECTION,SECTION); 
 
-        }
+        };
 
     });
 
@@ -809,9 +908,9 @@ const MOVIESPAGE=(data,SECTION)=>{
 
         TRAILORPAGE(data,SECTION)
 
-    })
+    });
 
-}
+};
 
 const TRAILORPAGE=(data,SECTION)=>{
 
