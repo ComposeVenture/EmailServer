@@ -7,6 +7,12 @@ const AUTORUN=()=>{
     if (localStorage.getItem('UserData') && !localStorage.getItem('Verification') ) {
         
         HOMEPAGE();
+
+        if (localStorage.getItem('NetWork')) {
+            
+            UPDATEUSERSTATUS();
+
+        };
  
         return;
 
@@ -446,8 +452,6 @@ const HOMEPAGE=()=>{
 
         PAGESDOWNLOAD('MovieLander');
 
-        UPDATEUSERSTATUS();
-
     }
 
     ADVERTSMOVIE();
@@ -707,33 +711,11 @@ const USERACCOUNTPAGE=()=>{
 
                 UPDATEDATA(SHEETURIL,'Users',data.ID,DATA,(data)=>{
 
-                    GETDATA(SHEETURIL,'Users',(datata)=>{
+                    UPDATEUSERSTATUS(()=>{
 
-                        FINDER(datata,'UserEmail',data.UserEmail,(users)=>{
-        
-                            if (users.UserEmail === data.UserEmail) {
+                        USERACCOUNTPAGE();
 
-                                JSONIFICATION(users,(ConvertedData)=>{
-
-                                    STORE('local','UserData',ConvertedData);
-            
-                                });
-
-                                return;
-                                
-                            }else{
-        
-                                DELETESTORAGE('local','UserData');
-
-                                RELOADPAGE();
-        
-                                return;
-        
-                            }
-        
-                        });
-        
-                    });
+                    })
 
                 });
 
@@ -745,13 +727,15 @@ const USERACCOUNTPAGE=()=>{
 
 }
 
-const UPDATEUSERSTATUS=()=>{
+const UPDATEUSERSTATUS=(callback)=>{
 
     DEJSON('local','UserData',(datata)=>{
 
         GETDATA(SHEETURIL,'Users',(data)=>{
 
             FINDER(data,'UserEmail',datata.UserEmail,(users)=>{
+
+                console.log(users)
     
                 if (users.UserEmail === datata.UserEmail) {
 
@@ -759,10 +743,12 @@ const UPDATEUSERSTATUS=()=>{
 
                         STORE('local','UserData',ConvertedData);
 
+                        callback();
+
+                        return;
+
                     });
-    
-                    return;
-                    
+        
                 }else{
     
                     DELETESTORAGE('local','UserData');
