@@ -17,265 +17,353 @@
     border-radius: 10px 10px 0px 0px;
     height: 45px;
     background: #8f7bb4;
-}
-.UserIcon{
-    position: absolute;
-    right: 0;
-    padding: 5%;
-    width: 25px;
-}
-.SearchIcon{
-    position: absolute;
-    left: 0;
-    padding: 5%;
-    width: 25px;
-}
-#HomeIcon{
-    width: 25px;
-}
-#LikeIcon{
-    width: 25px;
-}
-#CartIcon{
-    width: 25px;
+    bottom: 0;
 }
 
-#UserAccountBackIcon{
-    width: 25px;
+.HomeDiv{
+    background: transparent;
+    overflow-y: auto;
+}
+
+.Sections{
+    position: relative;
+    width: 98%;
+    left: 1%;
+    margin-top: 0.5rem;
+    border-radius: 10px;
+    height: 300px;
+    border: 1px solid #cdcdcc20;
+}
+
+.Header{
+    position: relative;
+}
+
+.Headers{
+    position: relative;
+    border: none;
+    overflow-x: auto;
+}
+
+#HomeIconButton{
+    width: 50px;
+    margin-top: auto;
+    margin-bottom: auto;
     margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    display: inline-flex;
+    height: 40px;
+    background: #8f7bb450;
+    flex-shrink: 0;
+}
 
+.ButtonHolders{
+    width: auto;
+    padding-right: 2%;
+    padding-left: 2%;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 5px;
+    margin-right: 5px;
+    display: inline-flex;
+    height: 40px;
+    background: #8f7bb450;
+    flex-shrink: 0;
+}
+
+.ButtonTitles{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 20px;
+}
+
+.AppIconed{
+    margin-left: 1rem;
+    width: 100px;
+}
+
+.RightedIcon{
+    margin-right: 0.5rem;
 }
 
 .logo{
     width: 100px;
-    margin-left: 36%;
+    left:35%;
 }
 
-.HomeDiv{
+.SectionImage{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    object-fit: cover;
+}
+
+.UserDiv{
     top: 50px;
     background: transparent;
-    bottom: 50px;
-    overflow-y: auto;
 }
 
-.OptionsHolders{
-    background-color: transparent;
-    height: 50px;
-    display: inline-flex;
+.UserAccountDiv{
     position: relative;
-    overflow-x: auto;
-}
-
-.Options{
-    position: relative;
-    background: #8f7bb4;
-    width: auto;
-    height: 35px;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 0.5rem;
-    margin-right: 0.2rem;
-    border-radius:5px;
-    flex-shrink: 0;
-    display: inline-flex;
-}
-
-.Option{
-    position: relative;
-    background: transparent;
-    flex-shrink: 0;
-    width: 80%;
-    height: 95%;
-    margin-left: 0.3rem;
-    margin-bottom: auto;
-    margin-right: 0.2rem;
-    margin-top: auto;
-    border-radius: 5px;
-    border: 1px solid #8f7bb4;
-}
-
-#HomeOptions{
-    width: 50px;
-}
-
-.Optioned{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: auto;
-    margin-left: auto;
-    font-size: 20px;
-    width: 100px;
-}
-
-.Sectioned{
-    background: #8f7bb4;
-    position: relative;
+    width: 98%;
     height: 200px;
-    width: 50px;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    border-radius: 0px 10px 10px 0px ;
+    left: 1%;
+    border-radius: 5px;
+    background: transparent;
+    display: inline-flex;
+    border: 1px solid #cdcdcc20;
+    top: 10px;
 }
 
-.Optione{
+.MyDetails{
+    width: 60%;
+    right: 1%;
+    height: auto;
+    top: 5px;
+    bottom: 50px;
+    border-radius: 5px;
+    border: 1px solid #cdcdcc20;
+    background: transparent;
+}
+
+.BottomLevel{
+    width: 60%;
+    right: 1%;
+    height: 45px;
+    top:auto;
+    bottom: 0px;
+    border-radius: 5px;
+    background: transparent;
+    display: inline-flex;
+    border: 1px solid #cdcdcc20;
+}
+
+.ImageHolder{
+    position: absolute;
+    width: 40%;
+    top: 10%;
+    left: 0;
+    height: 80%;
+    margin-right: 10rem;
+    border-radius: 50px;
+}
+
+.BuyButton{
+    position: absolute;
+    background: forestgreen;
+    width: 65px;
+    bottom: 0;
+    height: 35px;
+    right:1%;
+    left: auto;
+}
+
+.CartButton{
+    position: absolute;
+    background: forestgreen;
+    width: 35%;
+    height: 35px;
+    bottom: 0;
+    left: 1%;
+}
+
+.ProductName{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: 1rem;
+    font-size: 20px;
+}
+
+.ImagesHolder{
     position: relative;
+    width: 95%;
+    height: 45%;
+    background: transparent;
+    left: 2%;
+    border-radius: 5px;
+    display: inline-flex;
+    overflow-x: auto;
+    border: 1px solid #cdcdcc20;
+    top: 2%;
+    margin-bottom: 1rem;
+}
+
+.Images{
+    width: 95%;
+    border-radius: 10px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
+.RecommendedDiv{
+    position: relative;
+    width:98%;
+    border: 1px solid #cdcdcc20;
+    height: 30%;
+    left: 1%;
+    margin-top: 1rem;
+}
+
+#AdsRecommeded{
+   height: 180px;
+}
+
+.NameHolder{
+    background: #8f7bb4;
+    width: 10%;
+    border-radius: 0px 5px 5px 0px;
+}
+
+.NameTitles{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
     font-size: 20px;
     transform: rotate(270deg);
-    top: 57%;
 }
 
-.SectionedHolder{
-    position: relative;
-    display: inline-flex;
+.SectionHolder{
     background: transparent;
-}
-
-.DataDiv{
-    position: relative;
-    background: transparent;
-    height: 200px;
-    margin-top: auto;
-    margin-bottom: auto;
+    width: 89%;
+    right: 0;
     overflow-x: auto;
     display: inline-flex;
 }
 
-.Helddata{
+.Section{
     position: relative;
-    background: transparent;
-    flex-shrink: 0;
-    width: 40%;
-    height: 95%;
-    margin-left: 0.3rem;
-    margin-bottom: auto;
-    margin-right: 0.2rem;
+    width: 250px;
+    left: 0;
     margin-top: auto;
+    margin-bottom: auto;
     border-radius: 5px;
-    border: 1px solid #8f7bb4;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 95%;
+    border: 1px solid #cdcdcc20;
+    flex-shrink: 0;
 }
 
-.RecommendedText{
+.leftedText{
     text-align: left;
+    margin-left: 0px;
+    padding: 10px 0px 10px 20px;
+    margin-bottom: 0px;
+}
+
+.LeftedIcon{
     margin-left: 0.5rem;
 }
 
 .RecommendedDivs{
     position: relative;
-    background: transparent;
-    width: 100%;
-    height: 200px;
+    width:98%;
+    border: 1px solid #cdcdcc20;
+    height: 30%;
+    left: 1%;
+    margin-top: 0px;
     overflow-x: auto;
     display: inline-flex;
 }
 
-.ReloadIcon{
+.HeartIcon{
     position: absolute;
-    right: 40%;
-    padding: 5%;
-    width: 25px;
+    left: auto;
+    right: 0;
+    margin-right: 1rem;
+    margin-top: 1rem;
 }
 
-.Imaged{
+.RecommendedDivis{
     position: relative;
-    width: 100%;
-    height: 70%;
-    object-fit: cover;
-}
-
-.ItemNamed{
-    font-size: 15px;
-    text-align: left;
-    width: 100%;
-    top: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-left: 0.3rem;
-}
-
-.Pricetag{
-    position: absolute;
-    right: 5%;
-    bottom: 2%;
-    margin-bottom: 0;
-    background: #8f7bb4;
-    padding: 4%;
-    border-radius: 100px;
-}
-
-#LoaderIcon{
-    margin: 25% 40% ;
-}
-
-.ImagesHolder{
-    height: 200px;
-    background: transparent;
-    display: inline-flex;
-    border: 1px solid #cdcdcc20;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.Imager{
-    position: relative;
-    width: 100%;
-    height: 70%;
-    object-fit: cover;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-}
-
-.PriceHolder{
-    position: absolute;
-    background: transparent;
-    top: auto;
-    bottom: 0px;
-    height: 65%;
-    width: 90%;
-    left: 5%;
-    border-radius: 20px 20px 0px 0px;
-    border: 1px solid #cdcdcc20;
-}
-
-.ButonBottom{
+    width: 200px;
+    left: 0;
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    height: 40px;
-    display: inline-flex;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 80%;
+    border: 1px solid #cdcdcc20;
+    flex-shrink: 0;
+}
+#RecommendedDivas{
+    margin-top: 5px;
+    height: 230px;
+    border-radius: 10px;
 }
 
-.LeftText{
+.OptonsHolders{
+    position: absolute;
+    bottom: 0;
+    top: auto;
+    width: 95%;
+    left: 2.5%;
+    height: 50%;
+    background: #a8d2df50;
+    border: 1px solid #8f7bb450;
+    border-radius: 20px 20px 0px 0px ;
+}
+
+.LeftTitle{
     text-align: left;
+    margin-left: 1rem;
+    font-size: 20px;
+}
+
+.LeftedTitle{
+    text-align: left;
+    margin-left: 1rem;
+}
+
+.ProductDescription{
+    text-align: left;
+    margin-left: 1rem;
+    font-size: 16px;
+}
+
+#AddCartButton{
+    display: inline-flex;
     margin-top: auto;
     margin-bottom: auto;
     margin-left: auto;
     margin-right: auto;
 }
 
-#NameItem{
-    padding: 5%;
-    text-align: left;
-}
-
-#PriceItem{
-    padding: 5%;
-    text-align: left;
-    color: teal;
-}
-
-.SizeHolder{
-    position: relative;
-    background: transparent;
-    height: 50px;
-    width: 90%;
-    left: 5%;
-    border-radius: 5px;
-    overflow-x: auto;
+.BuyNowButton{
     display: inline-flex;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: 0.5rem;
+    background: forestgreen;
+    height: 40px;
+    width: 100px;
+    border-radius: 5px;
 }
 
-#ItemDetails{
-    padding: 3%;
-    font-size: 20px;
+#add2cartTitle{
+    font-size: 18px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    text-align: left;
+    margin-right: 3.5rem;
+}
+
+.LikeIcon{
+    position: absolute;
+    top: 0;
+    right: 3%;
+    top: 6.5%;
 }

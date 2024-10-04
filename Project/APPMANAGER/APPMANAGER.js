@@ -311,7 +311,7 @@ const UPDATECODEPAGE=()=>{
 
                 LOADER(ELEMENT);
 
-                const DATA=[Data.ProjectName,JavascriptCoder.value,StylesCoder.value,new Date()]
+                const DATA=[Data.ProjectName,JavascriptCoder.value,StylesCoder.value,Data.AppIcons,new Date()]
 
                 UPDATEDATA(SHEETURLI,SHEETNAME1,Data.ID,DATA,(data)=>{
 

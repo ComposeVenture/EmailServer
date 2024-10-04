@@ -1,4 +1,4 @@
-const TOKENIZATION=(EMAIL,LINK,AMOUNT)=>{
+const TOKENIZATION=(EMAIL,LINK,AMOUNT,callback)=>{
     
     var myHeaders = new Headers();
 
@@ -128,7 +128,7 @@ const PROCESSAPI=(RESULT,TOKEN,EMAIL,LINK,AMOUNT)=>{
     .then(response => response.json())
     .then(result => {
 
-        STORE('','PaymentLink',result.redirect_url);
+        callback(result.redirect_url);
     
     })
 
