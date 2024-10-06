@@ -1,6 +1,16 @@
 const DATABASELINK='https://docs.google.com/spreadsheets/d/1CaI9zBx3hOjwggAsTBZygUpe7zp7Cv1mUXJnDuqh2kk/edit';
 
+const DATALINK='https://drive.google.com/uc?export=download&id=1y1hMLwnLHdK3V3m4P_P3ABqmz79VY3gu';
+
 const AUTORUN=()=>{
+
+    if (localStorage.getItem('NetWork')) {
+
+        UPDATEAPPDATA('Winksta');
+
+        ITEMSDOWNLOAD();
+
+    };
 
     if (localStorage.getItem('UserData')) {
 
@@ -26,16 +36,6 @@ const AUTORUN=()=>{
         
     };
 
-    if (localStorage.getItem('NetWork')) {
-
-        UPDATEAPPDATA('Winksta');
-
-        ITEMSDOWNLOAD();
-
-        return;
-
-    };
-    
 };
 
 const ITEMSDOWNLOAD=()=>{
@@ -691,11 +691,15 @@ const USERACCOUNTPAGE=()=>{
 
                 <button class='forestgreen'>Sercuity</button>
 
-                <button class='forestgreen'>Sercuity</button>
+                <button class='forestgreen' id='UpdateApp'>App Update</button>
             
             </div>
             
         `);
+
+        CLICKED('#UpdateApp',()=>{
+            WEBSITE(DATALINK);
+        })
 
     });
 
@@ -820,7 +824,7 @@ const PRICEPAGE=(data)=>{
                 
                     </button>
 
-                    <button class='BuyNowButton' >
+                    <button id='BuyNowButton' class='BuyNowButton' >
 
                        <p class='ButtonTitles'>Buy</p>
                 
@@ -842,10 +846,8 @@ const PRICEPAGE=(data)=>{
 
             DEJSON('local','UserData',(info)=>{
 
-                TOKENIZATION(info.UserEmail,'https://composeventure.github.io/Compose-Pay/',data.ProductPrice);
-
-                setTimeout(() => {
-
+                TOKENIZATION(info.UserEmail,'https://composeventure.github.io/Compose-Pay/',data.ProductPrice,(PayLink)=>{
+                    
                     DISPLAY('',`
 
                         <header>
@@ -858,16 +860,16 @@ const PRICEPAGE=(data)=>{
 
                         <div class='UserDiv'>
 
-                            <iframe src='${sessionStorage.getItem('PaymentLink')}' ></iframe>
+                            <iframe src='${PayLink}' ></iframe>
                         
                         </div>
                         
                     `);
 
                     CLICKED('#closeBack',()=>{PRICEPAGE(data)})
-                    
-                }, 5000);
-    
+
+                });
+
             });
 
         });

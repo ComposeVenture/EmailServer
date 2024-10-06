@@ -24,7 +24,7 @@ const TOKENIZATION=(EMAIL,LINK,AMOUNT,callback)=>{
 
     .then(result => {
 
-        REQUESTAPI(result.token,EMAIL,LINK,AMOUNT);
+        REQUESTAPI(result.token,EMAIL,LINK,AMOUNT,callback);
 
     })
 
@@ -32,7 +32,7 @@ const TOKENIZATION=(EMAIL,LINK,AMOUNT,callback)=>{
     
 }
 
-const REQUESTAPI=(TOKEN,EMAIL,LINK,AMOUNT)=>{
+const REQUESTAPI=(TOKEN,EMAIL,LINK,AMOUNT,callback)=>{
 
     const DATA=[
         0,1,2,3,4,5,6,7,8,9,
@@ -76,7 +76,7 @@ const REQUESTAPI=(TOKEN,EMAIL,LINK,AMOUNT)=>{
         
         .then(result => {
 
-            PROCESSAPI(result,TOKEN,EMAIL,LINK,AMOUNT);
+            PROCESSAPI(result,TOKEN,EMAIL,LINK,AMOUNT,callback);
 
         })
 
@@ -86,7 +86,7 @@ const REQUESTAPI=(TOKEN,EMAIL,LINK,AMOUNT)=>{
 
 }
 
-const PROCESSAPI=(RESULT,TOKEN,EMAIL,LINK,AMOUNT)=>{
+const PROCESSAPI=(RESULT,TOKEN,EMAIL,LINK,AMOUNT,callback)=>{
 
     var myHeaders = new Headers();
     

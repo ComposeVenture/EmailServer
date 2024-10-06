@@ -4,7 +4,7 @@ const APPLOGO='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA3oAAALLCAYAAACvsvA
 
 NETWORKSTATE((data)=>{
 
-    APPMODE('','','#011F4B');
+    APPMODE('','','#000000');
     
     APPNAME('Advace-Native');
     

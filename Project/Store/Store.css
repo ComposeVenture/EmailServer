@@ -32,3 +32,13 @@
     margin-right: 1rem;
     text-align: right;
 }
+
+.AppDivs{
+    position: relative;
+    width: 150px;
+    background: red;
+    height: 150px;
+    display: inline-table;
+    margin: 15px;
+    border-radius: 5px;
+}

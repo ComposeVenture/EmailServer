@@ -1,0 +1,3 @@
+const DATABASESAVER=(DATABASE,NAME,LOCAL,STORE,callback)=>{GETDATA(DATABASE,NAME,(data)=>{const DATA={"Name":LOCAL,"Data":data};STOREINDEXED(LOCAL,STORE,DATA,(response)=>{callback(response);return;});});};
+const DATABASEUPDATER=(DATABASE,NAME,LOCAL,STORE)=>{GETDATA(DATABASE,NAME,(data)=>{const DATA={"Name":LOCAL,"Data":data};UPDATEINDEXED(LOCAL,STORE,DATA);return});};
+const DATAGETTER=(DATABASENAME,STORENAME,callback)=>{GETINDEXED(DATABASENAME,STORENAME,(data)=>{REDUX(data,(element)=>{REDUX(element.Data,(Element)=>{callback(Element);return;});});});};

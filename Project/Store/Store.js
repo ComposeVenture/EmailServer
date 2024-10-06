@@ -4,15 +4,7 @@ const AUTORUN=()=>{
 
     HOMEPAGE();
 
-    if (localStorage.getItem('NetWork')) {
-
-        UPDATEAPPDATA('Store');
-
-        APPDATADOWNLOAD();
-
-        return;
-        
-    }
+    ONLINEUPDATER();
 
 };
 
@@ -33,6 +25,24 @@ const HOMEPAGE=()=>{
         </footer>
         
     `);
+
+    DECLARATION('.HomeDiv',(ELEMENT)=>{
+
+        CLEAR(ELEMENT);
+
+        DATAGETTER('ComposeStore','App',(data)=>{
+
+            CREATEELEMENT('div','AppDivs',(ELEMENTS)=>{
+
+                ADD(ELEMENT,ELEMENTS);
+
+            });
+
+            console.log(data);
+        
+        });
+
+    });
 
 }
 
@@ -72,12 +82,40 @@ const PAGES=()=>{
     
 };
 
-const APPDATADOWNLOAD=()=>{
+const ONLINEUPDATER=()=>{
 
-    GETDATA(DATABASEURL,'Store',(data)=>{
+    if (localStorage.getItem('NetWork')) {
 
-        console.log(data);
+        UPDATEAPPDATA('Store');
 
-    });
+        if (localStorage.getItem('DataBaseUpdated')) {
 
-};
+            DATABASEUPDATER(DATABASEURL,'store','ComposeStore','App');
+
+            return;
+ 
+        } else {
+
+            DATABASESAVER(DATABASEURL,'store','ComposeStore','App',(data)=>{
+
+                if (data === true) {
+    
+                    TIMENOW((time)=>{
+    
+                        STORE('local','DataBaseUpdated',time);
+    
+                        HOMEPAGE();
+    
+                        return;
+    
+                    });
+    
+                };
+    
+            });
+            
+        };
+
+    };
+
+}
