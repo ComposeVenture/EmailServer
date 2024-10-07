@@ -34,7 +34,19 @@ const HOMEPAGE=()=>{
 
             CREATEELEMENT('div','AppDivs',(ELEMENTS)=>{
 
+                DISPLAY(ELEMENTS,`
+
+                    <img class='AppImages' src='${data.AppImage}'/>
+                    
+                `);
+
                 ADD(ELEMENT,ELEMENTS);
+
+                EVENT(ELEMENTS,'click',()=>{
+
+                    WEBSITE(data.AppLink);
+
+                });
 
             });
 
@@ -44,7 +56,7 @@ const HOMEPAGE=()=>{
 
     });
 
-}
+};
 
 const USERACCOUNTPAGE=()=>{
 
@@ -118,4 +130,4 @@ const ONLINEUPDATER=()=>{
 
     };
 
-}
+};

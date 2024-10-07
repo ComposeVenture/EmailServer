@@ -44,9 +44,66 @@
     border-radius: 5px;
 }
 
-.Input{
+.HomeUserImage{
+    position: absolute;
+    width: 20%;
+    margin-left: 0.5rem;
+    top: 10%;
+}
+
+.HomeUserName{
+    margin-left: 1rem;
+}
+
+.MoreUserDetail{
+    background: transparent;
+    width: 40%;
+    right: 25%;
+    height: 50px;
+    bottom: 0;
+    top: auto;
+    display: inline-flex;
+    margin-bottom: 0.2rem;
+}
+
+.UserMoreIcon{
+    position: absolute;
+    transform: rotate(180deg);
+    right: 2%;
+    top: 20%;
+    padding: 3%;
+    background: #cdcdcd10;
+    border-radius: 100px;
+}
+
+.RightText{
+    margin-right: 1rem;
+    margin-top: auto;
+    margin-left: auto;
+    margin-bottom: auto;
+    font-size: 18px;
+}
+
+.ContactDiv{
+    top: 55px;
+    overflow-y: auto;
+    background: transparent;
+}
+
+.CreateImageHodler{
+    position: relative;
+    background-color: #cdcdcd10;
+    height: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 98%;
+    left: 1%;
+    border-radius: 5px; 
     border: 1px solid #cdcdcd20;
-    border-radius: 10px;
-    padding: 1%;
-    left: 0.8%;
+}
+
+.Usericon{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }

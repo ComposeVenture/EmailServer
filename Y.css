@@ -1,0 +1,23 @@
+.MainImage{
+    width: 98%;
+    height: auto;
+    max-height: 200px;
+    left:1%;
+    border: 1px solid brown;
+}
+
+.HomeDiv{
+    overflow-y: auto;
+}
+
+#NewBack{
+    padding: 5%;
+    border-radius: 20px;
+    background: black;
+}
+
+.AppIcon{
+    width: 100px;
+    margin-left: 35%;
+    margin-top: 5rem;
+}
