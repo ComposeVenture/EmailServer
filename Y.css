@@ -1,23 +1,5 @@
-.MainImage{
-    width: 98%;
-    height: auto;
-    max-height: 200px;
-    left:1%;
-    border: 1px solid brown;
-}
-
-.HomeDiv{
-    overflow-y: auto;
-}
-
-#NewBack{
-    padding: 5%;
-    border-radius: 20px;
-    background: black;
-}
-
-.AppIcon{
-    width: 100px;
-    margin-left: 35%;
-    margin-top: 5rem;
-}
+.AppLogo{width: 50%;left: 35%; margin-top: 2rem;margin-bottom: 2rem;}
+.BackIcon{margin-left:.2rem;margin-right:1rem;}
+.RoundFooter{width:95%;left:2%;border-radius:50px;bottom:1%; border: 1px solid #dcdcdc10; background: #00000080;}
+#HomeLoader{margin:70% 45%;}.LeftIcon{ margin-left: 0.5rem; } .RightIcon{ margin-right: 0.5rem;} 
+.Input{ border: 1px solid #cdcdcd20; border-radius: 10px; padding: 1%; left: 0.8%; }

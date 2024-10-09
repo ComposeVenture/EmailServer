@@ -1,256 +1,496 @@
-const DATABASELINK='https://docs.google.com/spreadsheets/d/1CaI9zBx3hOjwggAsTBZygUpe7zp7Cv1mUXJnDuqh2kk/edit';
+const DATABASELINK='https://docs.google.com/spreadsheets/d/15xbb_GDX9UKv0r4N6uqsEl8SInRRyyiDT9vs7JJP6qU/edit';
 
 const AUTORUN=()=>{
 
+    ONLINEUPDATER();
+
     if (localStorage.getItem('UserData')) {
-
+       
         HOMEPAGE();
- 
-    }else{
-
-        LOGINPAGE();
-
-    }
-
-    if (localStorage.getItem('NetWork')) {
-
-        UPDATEAPPDATA('WinkstaUploader');
 
         return;
 
     }
 
+    if (localStorage.getItem('User')) {
+
+        EMAILVERIFICATIONPAGE();
+
+        return;
+        
+    }
+
+    LOGINPAGE();
+
+    return;
+
 };
+
+const ONLINEUPDATER=()=>{
+
+    if (localStorage.getItem('NetWork')) {
+
+        UPDATEAPPDATA('Connections');
+
+        if (localStorage.getItem('UserData')) {
+
+            DEJSON('local','UserData',(data)=>{
+
+                DATABASESAVER(DATABASELINK,data.UserEmail,'Connections','Users',(data)=>{
+
+                    if (data === true  ) {
+        
+                        TIMENOW((time)=>{
+        
+                            STORE('local','UsersUpdated',time);
+            
+                            return;
+        
+                        });
+         
+                    };
+        
+                })
+        
+                return;
+
+            });
+  
+        }
+ 
+    };
+
+}
 
 const HOMEPAGE=()=>{
 
     DISPLAY('',`
 
-        <img class='AppIcon' src='${localStorage.getItem('AppIcon')}'/>
+        <header class='Header' >
+            
+            <input type='search' class='SearchInput' placeholder='Search' />
 
-        <h1>Admin Panel</h1>
+            <button  class='NewButton' onclick='CREATECONTACTPAGE()' >New</button>
 
-        <button class='forestgreen' onclick='CREATEPRODUCTPAGE()' >Create New Product</button>
+        </header>
 
-        <button class='forestgreen'>All Product</button>
-        
+        <div class='MyData'></div>
+
+        <div class='MyContacts' ></div>
+
     `);
+
+    DECLARATION('.MyData',(ELEMENT)=>{
+
+        DEJSON('local','UserData',(data)=>{
+
+            DISPLAY(ELEMENT,`
+
+                <p class='HomeUserName'>${data.UserName}</p>
+
+                <img class='HomeUserImage' src='${data.UserImage || BLACKIMAGEICON }'/>
+                
+                <div class='MoreUserDetail'>
+
+                    <img onclick='RELOADPAGE()' src='${WHITRETRYICON}'/>
+
+                    <img src='${WHITEPENCILICON}'/>
+
+                    <img src='${WHITEDELETEICON}'/>
+                
+                </div>
+
+                <img class='UserMoreIcon' src='${WHITESINGLEBACKICON}'/>
+
+            `);
+
+            CLICKED('.UserMoreIcon',()=>{
+
+                USERACCOUNTPAGE(data);
+
+            });
+
+        });
+
+    });
 
 };
 
-const CREATEPRODUCTPAGE=()=>{
-
-    CLEARSTORAGE('')
+const LOGINPAGE=()=>{
 
     DISPLAY('',`
 
-        <div class='HomeDiv'>
+        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
 
-            <img class='BackIcon' id='NewBack' onclick='HOMEPAGE()' src='${WHITEBACKICON}'/>
-    
-            <h1>Winksta Remote</h1>
+        <p>Cloud Storage For Your Contacts</p>
 
-            <p>Create New Product</p>
+        <input type='email' id='Email' class='Input' placeholder='Enter Email' />
 
-            <img id='MainImage' class='MainImage' src='${BLACKIMAGEICON}' />
+        <button class='forestgreen'>Sign In</button>
 
-            <input type='text' id='ProductName' class='Input' placeholder='Enter Product Name' />
-
-            <input type='tel' id='ProductPrice' class='Input' placeholder='Enter Product Price' />
-
-            <input type='tel' id='ProductQuantity' class='Input' placeholder='Enter Product Quntity' />
-
-            <input type='text' id='ProductCatergory' class='Input' placeholder='Enter Product Catergory' />
-
-            <textarea placeholder='Product Details' class='Input' id='ProductDescription' ></textarea>
-
-            <p>Add Porduct Other Images</p>
-
-            <img id='One' class='MainImage' src='${BLACKIMAGEICON}' />
-
-            <br>
-
-            <img id='Two' class='MainImage' src='${BLACKIMAGEICON}' />
-
-            <br>
-
-            <img id='Three' class='MainImage' src='${BLACKIMAGEICON}' />
-
-            <br>
-
-            <img id='Four' class='MainImage' src='${BLACKIMAGEICON}' />
-
-            <button class='forestgreen'>Create Product</button>
-
-        </div>
-      
+        <button class='blue'>Create Account</button>
+        
     `);
 
-    CLICKED('#MainImage',()=>{
+    CLICKED('.blue',()=>{
 
-        IMAGEPICKER('#MainImage',(data)=>{
-
-            STORE('','ImageProductMain',data);
-
-        });
+        CREATEACCOUNTPAGE();
 
     });
 
-    CLICKED('#One',()=>{
+    DECLARATION('.forestgreen',(ELEMENT)=>{
 
-        IMAGEPICKER('#One',(data)=>{
+        EVENT(ELEMENT,'click',()=>{
 
-            STORE('','One',data);
+            DECLARATION('#Email',(EMAILINPUT)=>{
 
-        });
+                if (!EMAILINPUT.value) {
 
-    });
+                    TOAST('Enter Email');
 
-    CLICKED('#Two',()=>{
+                    return;
+                    
+                }
 
-        IMAGEPICKER('#Two',(data)=>{
+                LOADER(ELEMENT);
 
-            STORE('','Two',data);
+                GETDATA(DATABASELINK,'Users',(data)=>{
 
-        });
+                    FINDER(data,'UserEmail',EMAILINPUT.value,(users)=>{
+                        
+                        if (users.UserEmail === EMAILINPUT.value ) {
 
-    });
+                            JSONIFICATION(users,(MyData)=>{
 
-    CLICKED('#Three',()=>{
+                                STORE('local','UserData',MyData);
 
-        IMAGEPICKER('#Three',(data)=>{
+                                HOMEPAGE();
 
-            STORE('','Three',data);
+                                return;
 
-        });
+                            });
+                            
+                        }
 
-    });
+                        TOAST('No User Account Found');
 
-    CLICKED('#Four',()=>{
+                        ORIGIN(ELEMENT,'Sign In');
 
-        IMAGEPICKER('#Four',(data)=>{
+                        return;
 
-            STORE('','Four',data);
+                    });
 
-        });
-
-    });
-
-    CLICKED('.forestgreen',()=>{
-
-        const ProductName=document.querySelector('#ProductName');
-        const ProductPrice=document.querySelector('#ProductPrice');
-        const ProductQuantity=document.querySelector('#ProductQuantity');
-        const ProductDescription=document.querySelector('#ProductDescription');
-        const ProductCatergory=document.querySelector('#ProductCatergory');
-        
-        DECLARATION('.forestgreen',(ELEMENT)=>{
-
-            if (!ProductName.value) {
-                
-                TOAST('Enter Product Name');
-
-                return;
-
-            };
-
-            if (!ProductPrice.value) {
-                
-                TOAST('Enter Product Price');
-
-                return;
-
-            };
-
-            if (!ProductQuantity.value) {
-                
-                TOAST('Enter Product Qunatity');
-
-                return;
-
-            };
-
-            if (!ProductCatergory.value) {
-                
-                TOAST('Enter Product Catergory');
-
-                return;
-
-            };
-
-            if (!ProductDescription.value) {
-                
-                TOAST('Enter Product Details');
-
-                return;
-
-            };
-
-            if (!sessionStorage.getItem('ImageProductMain')) {
-                
-                TOAST('Add Product First Image');
-
-                return;
-
-            };
-            
-            LOADER(ELEMENT);
-
-            const HEADER=['ProductName','ProductImage','ProductPrice','ProductQuantity','ProductComments','ProductImageOne','ProductImageTwo','ProductImageThree','ProductImageFour','ProductCatergory','ProductDescription','ProductDate'];
-            
-            const DATA=[ProductName.value,sessionStorage.getItem('ImageProductMain'),ProductPrice.value,ProductQuantity.value,'',sessionStorage.getItem('One'),sessionStorage.getItem('Two'),sessionStorage.getItem('Three'),sessionStorage.getItem('Four'),ProductCatergory.value,ProductDescription.value,new Date()];
-
-            INSERTDATA(DATABASELINK,'Winksta',HEADER,DATA,(data)=>{
-
-                HOMEPAGE();
+                });
 
             });
 
         });
-        
-    })
+
+    });
 
 };
 
-const LOGINPAGE = () => {
+const CREATEACCOUNTPAGE=()=>{
 
-    DISPLAY('', `
-        <img class='AppIcon' src='${localStorage.getItem('AppIcon')}'/>
-        <br><br>
-        <input type='Email' id='Email' class='Input' placeholder='Enter Admin Email' />
-        <br><br>
-        <button class='forestgreen'>Login</button>
+    DISPLAY('',`
+
+        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
+
+        <p>Cloud Storage For Your Contacts</p>
+ 
+        <input type='text' id='Name' class='Input' placeholder='Enter Name' />
+
+        <input type='email' id='Email' class='Input' placeholder='Enter Email'/>
+
+         <input type='tel' id='Code' maxlength='6'  class='Input' placeholder='Enter Pin Code'/>
+
+        <button class='forestgreen'>Sign Up</button>
+
+        <button class='blue'>LogIn</button>
+        
     `);
 
-    CLICKED('.forestgreen', () => {
+    CLICKED('.blue',()=>{
 
-        DECLARATION('.forestgreen', (ELEMENT) => {
+        LOGINPAGE();
 
-            DECLARATION('#Email', (EMAIL) => {
+    });
 
-                if (!EMAIL.value) {
-                    TOAST('Enter Admin Email');
+    DECLARATION('.forestgreen',(ELEMENT)=>{
+
+        EVENT(ELEMENT,'click',()=>{
+
+            DECLARATION('#Name',(EMAILINPUTONE)=>{
+
+                if (!EMAILINPUTONE.value) {
+
+                    TOAST('Enter User Name');
+
                     return;
-                }
+                    
+                };
 
-                const validEmails = [
-                    'nagamiestherruth@gmail.com',
-                    'erouandrewrichard01@gmail.com',
-                    'e.corpcompanygroup27@gmail.com',
-                    'composeventures@gmail.com'
-                ];
+                DECLARATION('#Email',(EMAILINPUT)=>{
 
-                if (validEmails.includes(EMAIL.value)) {
-                    STORE('local', 'UserData', EMAIL.value);
-                    HOMEPAGE();
-                } else {
-                    TOAST('No Admin Found');
-                }
+                    if (!EMAILINPUT.value) {
+    
+                        TOAST('Enter Email');
+    
+                        return;
+                        
+                    }
+
+                    DECLARATION('#Code',(EMAILINPUTTWO)=>{
+
+                        if (!EMAILINPUT.value) {
+        
+                            TOAST('Enter Pin Code');
+        
+                            return;
+                            
+                        };
+
+                        LOADER(ELEMENT);
+
+                        GETDATA(DATABASELINK,'Users',(data)=>{
+
+                            RANDOMCODE((code)=>{
+
+                                const DATA={
+                                    "UserName":EMAILINPUTONE.value,
+                                    "UserEmail":EMAILINPUT.value,
+                                    "UserPassword":EMAILINPUTTWO.value,
+                                    "UserCode":code
+                                }
+
+                                POSTMAIL(EMAILINPUT.value,'Connections Account Creation',`Dear ${EMAILINPUT.value} \n Your Verification Code is ${code}`,(response)=>{
+
+                                    JSONIFICATION(DATA,(user)=>{
+
+                                        STORE('local','User',user);
+
+                                        EMAILVERIFICATIONPAGE();
+
+                                        return;
+
+                                    })
+
+                                });
+
+                            });
+
+                        });
+        
+                    });
+    
+                });
 
             });
 
         });
 
     });
+
+};
+
+const EMAILVERIFICATIONPAGE=()=>{
+
+    DISPLAY('',`
+
+        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
+
+        <p>Cloud Storage For Your Contacts</p>
+
+        <input type='tel' maxlength='6' id='Code' class='Input' placeholder='Enter Verification Code' />
+
+        <button class='forestgreen'>Verify</button>
+
+        <button class='blue'>Cancel</button>
+        
+    `);
+
+    CLICKED('.blue',()=>{
+
+        DELETESTORAGE('local','User');
+
+        AUTORUN();
+
+    });
+
+    DECLARATION('.forestgreen',(ELEMENT)=>{
+
+        EVENT(ELEMENT,'click',()=>{
+
+            DECLARATION('#Code',(EMAILINPUT)=>{
+
+                if (!EMAILINPUT.value) {
+
+                    TOAST('Enter Verification Code');
+
+                    return;
+                    
+                }
+
+                DEJSON('local','User',(Mydata)=>{
+
+                    if (EMAILINPUT.value !== Mydata.UserCode  ) {
+
+                        TOAST('Invalid Verification Code');
+    
+                        return;
+                        
+                    };
+    
+                    LOADER(ELEMENT);
+
+                    GETDATA(DATABASELINK,'Users',(data)=>{
+    
+                        FINDER(data,'UserEmail',Mydata.UserEmail,(users)=>{
+                            
+                            if (users.UserEmail === Mydata.UserEmail ) {
+    
+                                TOAST('User Account Found');
+
+                                ORIGIN(ELEMENT,'Verify');
+    
+                                return;
+                                
+                            };
+
+                            const HEADER=['UserName','UserEmail','UserPassword','CreatedOn','Device'];
+
+                            TIMENOW((time)=>{
+
+                                DEVICED((device)=>{
+
+                                    const DATA=[Mydata.UserName,Mydata.UserEmail,Mydata.UserPassword,time,device]
+
+                                    INSERTDATA(DATABASELINK,'Users',HEADER,DATA,(data)=>{
+
+                                        CREATETABLE(DATABASELINK,Mydata.UserEmail,(datata)=>{
+
+                                            GETDATA(DATABASELINK,'Users',(datate)=>{
+    
+                                                FINDER(datate,'UserEmail',Mydata.UserEmail,(users)=>{
+                                                    
+                                                    if (users.UserEmail === Mydata.UserEmail ) {
+
+                                                        JSONIFICATION(users,(Users)=>{
+
+                                                            DELETESTORAGE('local','User');
+
+                                                            STORE('local','UserData',Users);
+
+                                                            HOMEPAGE();
+                            
+                                                            return;
+                                                        
+                                                        });
+                            
+                                                    };
+                                                });
+
+                                            });
+
+                                        });
+                                        
+                                    });
+
+                                });
+
+                            });
+
+                            return;
+    
+                        });
+    
+                    });
+
+                });
+
+            });
+
+        });
+
+    });
+
+};
+
+const CREATECONTACTPAGE=()=>{
+
+    DISPLAY('',`
+
+        <header>
+
+            <img class='BackIcon' onclick='HOMEPAGE()' src='${WHITESINGLEBACKICON}'/>
+        
+            <p class='RightText'>Create New Contact</p>
+
+        </header>
+
+        <div class='ContactDiv'>
+
+            <div class='CreateImageHodler'>
+
+                <img class='Usericon' src='${BLACKIMAGEICON}'/>
+            
+            </div>
+
+            <input type='email' id='Email' class='Input' placeholder="Enter Person's Name" />
+
+            <input type='email' id='Email' class='Input' placeholder=' Enter First Number ' />
+
+            <input type='email' id='Email' class='Input' placeholder=' Enter Second Number ' />
+
+            <input type='email' id='Email' class='Input' placeholder=' Enter Third Number ' />
+
+            <input type='email' id='Email' class='Input' placeholder=' Enter Fourth Number ' />
+
+            <input type='email' id='Email' class='Input' placeholder=' Enter Personal Email ' />
+
+            <input type='email' id='Email' class='Input' placeholder=' Enter Work Email ' />
+        
+            <textarea placeholder='About Person' ></textarea>
+
+            <button class='forestgreen'>Save Number</button>
+        
+        </div>
+        
+    `);
+
+    CLICKED('.Usericon',()=>{
+
+        IMAGEPICKER('.Usericon',(data)=>{
+
+        });
+    
+    })
+
+
+}
+
+const USERACCOUNTPAGE=(data)=>{
+
+    DISPLAY('',`
+
+        <header>
+
+            <img class='BackIcon' onclick='HOMEPAGE()' src='${WHITESINGLEBACKICON}'/>
+        
+            <img class='RightIcon' src='${WHITESETTINGICON}'/>
+
+        </header>
+
+        <div class='ContactDiv'>
+
+            <div class='CreateImageHodler'>
+
+                <img class='Usericon' src='${BLACKIMAGEICON}'/>
+            
+            </div>
+
+        </div>
+        
+    `);
 
 }

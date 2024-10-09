@@ -1,1 +1,6 @@
-.LeftIcon{ margin-left: 0.5rem; } .RightIcon{ margin-right: 0.5rem;} .Input{ border: 1px solid #cdcdcd20; border-radius: 10px; padding: 1%; left: 0.8%; }
+.LoadingIconer{ position: relative; width: 25px; height: 25px; border-radius: 50%; animation: spin 1s linear infinite reverse; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+.AppLogo{width: 50%;left: 25%;margin-top: 2rem;margin-bottom: 2rem;}
+.BackIcon{margin-left:.2rem;margin-right:1rem;}
+.RoundFooter{width:95%;left:2%;border-radius:50px;bottom:1%; border: 1px solid #dcdcdc10; background: #00000080;}
+#HomeLoader{margin:70% 45%;}.LeftIcon{ margin-left: 0.5rem; } .RightIcon{ margin-right: 0.5rem;} 
+.Input{ border: 1px solid #cdcdcd20; border-radius: 10px; padding: 1%; left: 0.8%; }
