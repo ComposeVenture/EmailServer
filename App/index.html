@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-corp Apps</title>
 </head>
+<script src="../Y.js" ></script>
 <script src="./blackicons.js"></script>
 <script src="./whiteicons.js"></script>
+<link rel="stylesheet" href="../Y.css">
 <style>
     body{
-        color: #ffffff;
-        background: #000000;
+        color: #000000;
+        background: #ffffff;
     }
     .body{
         position: fixed;
@@ -28,8 +30,11 @@
     .UpdateImage{
         position: relative;
         width: 50%;
-        height: 30%;
+        height: auto;
         margin-top: 15%;
+        background: #dcdcdc80;
+        padding: 20%;
+        border-radius: 100%;
     }
     .LoadingIcon { 
         position: relative;
@@ -56,7 +61,7 @@
 const ROUTECSS=(DATA)=>{const styleElement = document.createElement("style"); styleElement.textContent = DATA; document.head.appendChild(styleElement);};
 const ROUTEJS=(DATA)=>{ const styleElement = document.createElement("script"); styleElement.textContent = DATA; document.head.appendChild(styleElement);};
 localStorage.setItem('Environment','Test');
-const NAME='Connections';
+const NAME='None';
 ROUTECSS(localStorage.getItem('Styles'));ROUTECSS(localStorage.getItem('AppStyles'));ROUTECSS(localStorage.getItem('Classes'));ROUTECSS(localStorage.getItem('CloudStyles'));ROUTECSS(localStorage.getItem('Colors'));ROUTECSS(localStorage.getItem('TemplateStyles'));
 ROUTEJS(localStorage.getItem('Apis'));ROUTEJS(localStorage.getItem('AppFunctions'));ROUTEJS(localStorage.getItem('CloudFunctions'));ROUTEJS(localStorage.getItem('Components'));ROUTEJS(localStorage.getItem('Constants'));ROUTEJS(localStorage.getItem('Functions'));ROUTEJS(localStorage.getItem('Json'));ROUTEJS(localStorage.getItem('Library'));ROUTEJS(localStorage.getItem('Links'));ROUTEJS(localStorage.getItem('Module'));ROUTEJS(localStorage.getItem('Plugins'));ROUTEJS(localStorage.getItem('TemplateFunctions'));ROUTEJS(localStorage.getItem('Templates'));
 const APPLOAD=()=>{
@@ -123,11 +128,11 @@ const APPLOAD=()=>{
         } else {
             console.log(error)
         }  
-    });
+    });   
 }
 if (localStorage.getItem('ModulesUpdated')) {
     AUTORUN();
-} else {
+    } else {
     APPLOAD();
 }
 </script>

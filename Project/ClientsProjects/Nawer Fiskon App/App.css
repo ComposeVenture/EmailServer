@@ -1,0 +1,56 @@
+.Lefttext{
+    text-align: left;
+    margin-left: 1rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    color: blue;
+}
+
+.AppLogoImage{
+    width: 30%;
+    left: 35%; 
+    margin: auto;
+    margin-top: 3rem;
+    border-radius: 100%;
+    text-align: center;
+}
+
+#LoginButton{
+    border-radius: 50px;
+    width: 60%;
+    margin: auto;
+    margin-top: 1rem;
+}
+
+.Inputed{
+    border: 1px solid #cdcdcd20;
+    border-radius: 10px; 
+    padding: 1%; left: 0.8%; 
+    border: 1px solid #cdcdcd50;
+    width: 90%;
+    height: 70px;
+    left: 5%;
+    color: black;
+}
+
+#TopOne{
+    margin-top: 5rem;
+}
+
+#Name{
+    display: none;
+}
+
+.HomeHeder{
+    background: gainsboro;
+}
+
+#MenuIcon{
+    width: 7%;
+}
+
+.HomeDiv{
+    background-color: transparent;
+    top: 52px;
+    overflow-y: auto;
+}

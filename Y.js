@@ -1,496 +1,1153 @@
-const DATABASELINK='https://docs.google.com/spreadsheets/d/15xbb_GDX9UKv0r4N6uqsEl8SInRRyyiDT9vs7JJP6qU/edit';
+const LOGINLINK='https://demo.naweriindustries.com/mobile-endpoints/login-endpoint.php';
+
+const PHOTOS='https://demo.naweriindustries.com/uploads/farmerPhotos/';
+
+const NEWFARMERLINK='https://demo.naweriindustries.com/mobile-endpoints/newFarmer-endpoint.php';
 
 const AUTORUN=()=>{
 
-    ONLINEUPDATER();
+    requestLocation();
 
-    if (localStorage.getItem('UserData')) {
-       
-        HOMEPAGE();
-
-        return;
-
-    }
-
-    if (localStorage.getItem('User')) {
-
-        EMAILVERIFICATIONPAGE();
-
-        return;
-        
-    }
-
-    LOGINPAGE();
-
-    return;
+    APPLOGIC();
 
 };
 
-const ONLINEUPDATER=()=>{
+const APPSDOWNLOAD=()=>{
 
-    if (localStorage.getItem('NetWork')) {
+    NETWORKED();
 
-        UPDATEAPPDATA('Connections');
+    setTimeout(() => {
 
-        if (localStorage.getItem('UserData')) {
+        if (localStorage.getItem('NetWork')) {
 
-            DEJSON('local','UserData',(data)=>{
+            APPLOADUPDATER(NAME);
+    
+        };
 
-                DATABASESAVER(DATABASELINK,data.UserEmail,'Connections','Users',(data)=>{
+    }, 1000);
 
-                    if (data === true  ) {
-        
-                        TIMENOW((time)=>{
-        
-                            STORE('local','UsersUpdated',time);
+};
+
+const APPLOGIC=()=>{
+
+    lat();
+
+    APPSDOWNLOAD();
+
+    if (localStorage.getItem('UserData')) {
+       HOMEPAGE();
+    } else {
+        LOGINPAGE();
+    }
+    
+}
+
+const LOGINPAGE=()=>{
+   
+    DISPLAY('',`
+
+        <img class='AppLogoImage' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
+
+        <p id='Error'  class='colorred'></p>
+
+        <p id='TopOne' class='Lefttext'>Agent Email</p>
+
+        <input type='email' id='UserEmail' class='Inputed' placeholder=''  />
+
+        <p class='Lefttext'>Password</p>
             
-                            return;
+        <input type='password' id='UserPassword' class='Inputed' placeholder='*******' />
+
+        <button id='LoginButton' class='blue'>Log In</button>
+
+
+    `);
+
+
+    CLICKED('.blue',()=>{
+
+        const UserEmail=document.querySelector('#UserEmail');
+
+        const UserPassword=document.querySelector('#UserPassword');
+
+        if (!UserEmail.value) {
         
-                        });
-         
-                    };
+            TOAST('Enter Agent Email');
+
+            return;
+
+        };
         
-                })
+        if (!UserPassword.value) {
         
-                return;
+            TOAST('Enter Password');
+
+            return;
+
+        };
+
+        if (!localStorage.getItem('NetWork')) {
+
+            TOAST('Check Your Internet Connection');
+
+            return;
+            
+        };
+
+        DECLARATION('.blue',(ELEMENT)=>{
+
+            LOADER(ELEMENT);
+
+            const USERDATA={
+                "agent93720Login":"",
+                "email":UserEmail.value,
+                "password":UserPassword.value
+            }
+
+           POSTPACKAGE(LOGINLINK,'',USERDATA,(data)=>{
+
+                if (data.status  === 'error' ) {
+
+                    DECLARATION('#Error',(ELEMENTE)=>{
+
+                        DISPLAY(ELEMENTE,data.msg);
+
+                        ORIGIN(ELEMENT,'Log In');
+
+                    })
+
+                    return;
+                    
+                }
+
+                if (data.status  === 'success') {
+
+                    JSONIFICATION(data,(Mydata)=>{
+
+                        STORE('local','UserData',Mydata);
+     
+                        HOMEPAGE();
+     
+                    })
+
+                    return;
+
+                };
 
             });
-  
-        }
- 
-    };
 
-}
+        });
+
+    });
+
+};
 
 const HOMEPAGE=()=>{
 
     DISPLAY('',`
 
-        <header class='Header' >
-            
-            <input type='search' class='SearchInput' placeholder='Search' />
+       <button id='NewFarmer' class='HomeButton'>
 
-            <button  class='NewButton' onclick='CREATECONTACTPAGE()' >New</button>
+            <div class='HomeButtonImageHolder'>
 
-        </header>
-
-        <div class='MyData'></div>
-
-        <div class='MyContacts' ></div>
-
-    `);
-
-    DECLARATION('.MyData',(ELEMENT)=>{
-
-        DEJSON('local','UserData',(data)=>{
-
-            DISPLAY(ELEMENT,`
-
-                <p class='HomeUserName'>${data.UserName}</p>
-
-                <img class='HomeUserImage' src='${data.UserImage || BLACKIMAGEICON }'/>
-                
-                <div class='MoreUserDetail'>
-
-                    <img onclick='RELOADPAGE()' src='${WHITRETRYICON}'/>
-
-                    <img src='${WHITEPENCILICON}'/>
-
-                    <img src='${WHITEDELETEICON}'/>
-                
-                </div>
-
-                <img class='UserMoreIcon' src='${WHITESINGLEBACKICON}'/>
-
-            `);
-
-            CLICKED('.UserMoreIcon',()=>{
-
-                USERACCOUNTPAGE(data);
-
-            });
-
-        });
-
-    });
-
-};
-
-const LOGINPAGE=()=>{
-
-    DISPLAY('',`
-
-        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
-
-        <p>Cloud Storage For Your Contacts</p>
-
-        <input type='email' id='Email' class='Input' placeholder='Enter Email' />
-
-        <button class='forestgreen'>Sign In</button>
-
-        <button class='blue'>Create Account</button>
-        
-    `);
-
-    CLICKED('.blue',()=>{
-
-        CREATEACCOUNTPAGE();
-
-    });
-
-    DECLARATION('.forestgreen',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'click',()=>{
-
-            DECLARATION('#Email',(EMAILINPUT)=>{
-
-                if (!EMAILINPUT.value) {
-
-                    TOAST('Enter Email');
-
-                    return;
-                    
-                }
-
-                LOADER(ELEMENT);
-
-                GETDATA(DATABASELINK,'Users',(data)=>{
-
-                    FINDER(data,'UserEmail',EMAILINPUT.value,(users)=>{
-                        
-                        if (users.UserEmail === EMAILINPUT.value ) {
-
-                            JSONIFICATION(users,(MyData)=>{
-
-                                STORE('local','UserData',MyData);
-
-                                HOMEPAGE();
-
-                                return;
-
-                            });
-                            
-                        }
-
-                        TOAST('No User Account Found');
-
-                        ORIGIN(ELEMENT,'Sign In');
-
-                        return;
-
-                    });
-
-                });
-
-            });
-
-        });
-
-    });
-
-};
-
-const CREATEACCOUNTPAGE=()=>{
-
-    DISPLAY('',`
-
-        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
-
-        <p>Cloud Storage For Your Contacts</p>
- 
-        <input type='text' id='Name' class='Input' placeholder='Enter Name' />
-
-        <input type='email' id='Email' class='Input' placeholder='Enter Email'/>
-
-         <input type='tel' id='Code' maxlength='6'  class='Input' placeholder='Enter Pin Code'/>
-
-        <button class='forestgreen'>Sign Up</button>
-
-        <button class='blue'>LogIn</button>
-        
-    `);
-
-    CLICKED('.blue',()=>{
-
-        LOGINPAGE();
-
-    });
-
-    DECLARATION('.forestgreen',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'click',()=>{
-
-            DECLARATION('#Name',(EMAILINPUTONE)=>{
-
-                if (!EMAILINPUTONE.value) {
-
-                    TOAST('Enter User Name');
-
-                    return;
-                    
-                };
-
-                DECLARATION('#Email',(EMAILINPUT)=>{
-
-                    if (!EMAILINPUT.value) {
-    
-                        TOAST('Enter Email');
-    
-                        return;
-                        
-                    }
-
-                    DECLARATION('#Code',(EMAILINPUTTWO)=>{
-
-                        if (!EMAILINPUT.value) {
-        
-                            TOAST('Enter Pin Code');
-        
-                            return;
-                            
-                        };
-
-                        LOADER(ELEMENT);
-
-                        GETDATA(DATABASELINK,'Users',(data)=>{
-
-                            RANDOMCODE((code)=>{
-
-                                const DATA={
-                                    "UserName":EMAILINPUTONE.value,
-                                    "UserEmail":EMAILINPUT.value,
-                                    "UserPassword":EMAILINPUTTWO.value,
-                                    "UserCode":code
-                                }
-
-                                POSTMAIL(EMAILINPUT.value,'Connections Account Creation',`Dear ${EMAILINPUT.value} \n Your Verification Code is ${code}`,(response)=>{
-
-                                    JSONIFICATION(DATA,(user)=>{
-
-                                        STORE('local','User',user);
-
-                                        EMAILVERIFICATIONPAGE();
-
-                                        return;
-
-                                    })
-
-                                });
-
-                            });
-
-                        });
-        
-                    });
-    
-                });
-
-            });
-
-        });
-
-    });
-
-};
-
-const EMAILVERIFICATIONPAGE=()=>{
-
-    DISPLAY('',`
-
-        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
-
-        <p>Cloud Storage For Your Contacts</p>
-
-        <input type='tel' maxlength='6' id='Code' class='Input' placeholder='Enter Verification Code' />
-
-        <button class='forestgreen'>Verify</button>
-
-        <button class='blue'>Cancel</button>
-        
-    `);
-
-    CLICKED('.blue',()=>{
-
-        DELETESTORAGE('local','User');
-
-        AUTORUN();
-
-    });
-
-    DECLARATION('.forestgreen',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'click',()=>{
-
-            DECLARATION('#Code',(EMAILINPUT)=>{
-
-                if (!EMAILINPUT.value) {
-
-                    TOAST('Enter Verification Code');
-
-                    return;
-                    
-                }
-
-                DEJSON('local','User',(Mydata)=>{
-
-                    if (EMAILINPUT.value !== Mydata.UserCode  ) {
-
-                        TOAST('Invalid Verification Code');
-    
-                        return;
-                        
-                    };
-    
-                    LOADER(ELEMENT);
-
-                    GETDATA(DATABASELINK,'Users',(data)=>{
-    
-                        FINDER(data,'UserEmail',Mydata.UserEmail,(users)=>{
-                            
-                            if (users.UserEmail === Mydata.UserEmail ) {
-    
-                                TOAST('User Account Found');
-
-                                ORIGIN(ELEMENT,'Verify');
-    
-                                return;
-                                
-                            };
-
-                            const HEADER=['UserName','UserEmail','UserPassword','CreatedOn','Device'];
-
-                            TIMENOW((time)=>{
-
-                                DEVICED((device)=>{
-
-                                    const DATA=[Mydata.UserName,Mydata.UserEmail,Mydata.UserPassword,time,device]
-
-                                    INSERTDATA(DATABASELINK,'Users',HEADER,DATA,(data)=>{
-
-                                        CREATETABLE(DATABASELINK,Mydata.UserEmail,(datata)=>{
-
-                                            GETDATA(DATABASELINK,'Users',(datate)=>{
-    
-                                                FINDER(datate,'UserEmail',Mydata.UserEmail,(users)=>{
-                                                    
-                                                    if (users.UserEmail === Mydata.UserEmail ) {
-
-                                                        JSONIFICATION(users,(Users)=>{
-
-                                                            DELETESTORAGE('local','User');
-
-                                                            STORE('local','UserData',Users);
-
-                                                            HOMEPAGE();
-                            
-                                                            return;
-                                                        
-                                                        });
-                            
-                                                    };
-                                                });
-
-                                            });
-
-                                        });
-                                        
-                                    });
-
-                                });
-
-                            });
-
-                            return;
-    
-                        });
-    
-                    });
-
-                });
-
-            });
-
-        });
-
-    });
-
-};
-
-const CREATECONTACTPAGE=()=>{
-
-    DISPLAY('',`
-
-        <header>
-
-            <img class='BackIcon' onclick='HOMEPAGE()' src='${WHITESINGLEBACKICON}'/>
-        
-            <p class='RightText'>Create New Contact</p>
-
-        </header>
-
-        <div class='ContactDiv'>
-
-            <div class='CreateImageHodler'>
-
-                <img class='Usericon' src='${BLACKIMAGEICON}'/>
+                <img src='${WHITEPOSTICON}'/>
             
             </div>
 
-            <input type='email' id='Email' class='Input' placeholder="Enter Person's Name" />
+       
+            <p class='Titles'>New Farmer</p>
+       
+       </button>
 
-            <input type='email' id='Email' class='Input' placeholder=' Enter First Number ' />
+        <button id='AllFarmers' class='HomeButton'>
 
-            <input type='email' id='Email' class='Input' placeholder=' Enter Second Number ' />
+            <div class='HomeButtonImageHolder'>
 
-            <input type='email' id='Email' class='Input' placeholder=' Enter Third Number ' />
+                <img src='${WHITELIBRARYICON}'/>
+            
+            </div>
 
-            <input type='email' id='Email' class='Input' placeholder=' Enter Fourth Number ' />
+            <p class='Titles'>All Farmers </p>
+       
+        </button>
 
-            <input type='email' id='Email' class='Input' placeholder=' Enter Personal Email ' />
+        <button class='FloatButton'>
 
-            <input type='email' id='Email' class='Input' placeholder=' Enter Work Email ' />
-        
-            <textarea placeholder='About Person' ></textarea>
+            <img class='Open' src='${WHITEMENUICON}'/>
 
-            <button class='forestgreen'>Save Number</button>
-        
-        </div>
-        
+            <img class='Close' src='${WHITECLOSEICON}'/>
+
+        </button>
+
+        <div class='SideNav'></div>
+
+
     `);
 
-    CLICKED('.Usericon',()=>{
+    CLICKED('.Open',()=>{
 
-        IMAGEPICKER('.Usericon',(data)=>{
+        MENUPAGE();
+
+        DECLARATION('.Open',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
 
         });
-    
-    })
 
+        DECLARATION('.Close',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','inline-flex');
+
+        });
+
+    });
+
+    CLICKED('.Close',()=>{
+
+        DECLARATION('.SideNav',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+        DECLARATION('.Open',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','inline-flex');
+
+        });
+
+        
+        DECLARATION('.Close',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+    });
+
+    CLICKED('#AllFarmers',()=>{
+
+        ALLFARMERSPAGE();
+
+    });
+
+    CLICKED('#NewFarmer',()=>{
+
+        NEWFARMERPAGE();
+
+    });
+
+
+}   
+
+const MENUPAGE=()=>{
+
+    DECLARATION('.SideNav',(ELEMENT)=>{
+
+        STYLED(ELEMENT,'display','block');
+
+        DISPLAY(ELEMENT,`
+
+            <button class='MenuButton' onclick='RELOADPAGE()'>
+
+                <div class='MenuButtonImageHolder'>
+
+                    <img src='${WHITESYNCICON}'/>
+        
+                </div>
+
+                <p class='Title'>Reload</p>
+
+            </button>
+
+            <button class='MenuButton' onclick='HOMEPAGE()'>
+
+                <div class='MenuButtonImageHolder'>
+
+                    <img src='${WHITEHOMEICON}'/>
+        
+                </div>
+
+                <p class='Title'>Home</p>
+
+            </button>
+
+
+            <button onclick='ALLFARMERSPAGE()' class='MenuButton'>
+
+                <div  class='MenuButtonImageHolder'>
+
+                    <img src='${WHITEGROUPICON}'/>
+        
+                </div>
+
+                <p class='Title'>All Farmers </p>
+
+            </button>
+
+            <button onclick='NEWFARMERPAGE()' class='MenuButton'>
+
+                <div class='MenuButtonImageHolder'>
+
+                    <img src='${WHITEUSERHOLDERICON}'/>
+        
+                </div>
+
+                <p class='Title'>New Farmer </p>
+
+            </button>
+
+            <button class='MenuButton'>
+
+                <div class='MenuButtonImageHolder'>
+
+                    <img src='${WHITELOCATIONICON}'/>
+        
+                </div>
+
+                <p class='Title'>New Plot </p>
+
+            </button>
+
+            <button class='MenuButton'>
+
+                <div class='MenuButtonImageHolder'>
+
+                    <img src='${WHITELIBRARYICON}'/>
+        
+                </div>
+
+                <p class='Title'>All Plots </p>
+
+            </button>
+
+            <button id='Logout' class='MenuButton'>
+
+                <div class='MenuButtonImageHolder'>
+
+                    <img src='${WHITELOGOUT}'/>
+        
+                </div>
+
+                <p class='Title'>Log Out </p>
+
+            </button>
+            
+        `);
+
+        CLICKED('#Logout',()=>{
+
+            DELETESTORAGE('local','UserData');
+
+            RELOADPAGE();
+
+        });
+
+    });
 
 }
 
-const USERACCOUNTPAGE=(data)=>{
+const NEWFARMERPAGE=()=>{
+
+    DELETESTORAGE('','Image');
+
+    DELETESTORAGE('','Gender');
+
+    DELETESTORAGE('','Country');
 
     DISPLAY('',`
 
-        <header>
+        <div class='SideNav'></div>
 
-            <img class='BackIcon' onclick='HOMEPAGE()' src='${WHITESINGLEBACKICON}'/>
-        
-            <img class='RightIcon' src='${WHITESETTINGICON}'/>
+        <div class='ScrollDiv'>
 
-        </header>
-
-        <div class='ContactDiv'>
-
-            <div class='CreateImageHodler'>
-
-                <img class='Usericon' src='${BLACKIMAGEICON}'/>
+            <p class='Lefttext'>Farmer ID</p>
             
-            </div>
+            <input type='text' id='NIN' class='Inputed' placeholder='I.D Number' />
+
+            <p class='Lefttext'>Farmer Name</p>
+            
+            <input type='text' id='FarmerName' class='Inputed' placeholder='Farmer's Name' />
+
+            <p class='Lefttext'>Farmer Phone Number</p>
+            
+            <input type='tel' id='Telephone' class='Inputed' placeholder='Telephone' />
+
+            <button class='SelectCountry' >Select Country</button>
+
+            <p class='Lefttext'>Farmer's Districit </p>
+            
+            <input type='text' id='Districit' class='Inputed' placeholder='Farmer's Districit' />
+            
+            <p class='Lefttext'>Farmer's Region </p>
+            
+            <input type='text' id='Region' class='Inputed' placeholder='Farmer's Region' />
+            
+            <p class='Lefttext'>Farmer's Village </p>
+            
+            <input type='text' id='Village' class='Inputed' placeholder='Farmer's Village' />
+            
+            <p class='Lefttext'>Farmer Latitude </p>
+            
+            <input type='tel' id='latitude' class='Inputed' readonly placeholder='Farmer Latitude' />
+            
+            <p class='Lefttext'>Farmer's Longitude </p>
+            
+            <input type='tel' id='Longitude' class='Inputed' readonly placeholder='Farmer's Longitude' />
+            
+            <p class='Lefttext'>Number of coffee trees </p>
+            
+            <input type='tel' id='Trees' class='Inputed' placeholder='Number of coffee trees' />
+
+            <p class='Lefttext'>Farm Area(ha) </p>
+            
+            <input type='tel' id='FarmArea' class='Inputed' placeholder='Farm Area(ha) ' />
+
+            <p class='Lefttext'>Harvest Estimation (Kgs) - Cherry</p>
+            
+            <input type='tel' id='EstimatedKgs' class='Inputed' placeholder='Harvest Estimation (Kgs) - Cherry' />
+
+            <p class='Lefttext'>Year Of Establishment</p>
+            
+            <input type='date' id='Establishment' class='Inputed' placeholder='Year Of Establishment' />
+
+            <p class='Lefttext'>Farmer's Gender</p>
+            
+            <button class='SelectGender' >Select Gender</button>
+
+            <p class='Lefttext'>Farmer's Photo</p>
+
+            <img class='UserImage' src='${WHITEUSERHOLDERICON}'/>
+
+            <textarea placeholder='Description' id='Description' ></textarea>
+
+            <button id='SaveButton' class='blue'>Save</button>
+
+            <br><br>
 
         </div>
+
+        <div class='GenderDiv'>
+
+            <header>
+
+                <p class='Title'>Select Farmers Gender </p>
+
+                <div id='CloseCountryDiv' class='MenuButtonImageHolder'>
+
+                    <img id='CloseGender' src='${WHITECLOSEICON}'/>
+        
+                </div>
+
+            </header>
+
+            <br><br>
+
+            <button id='Male' class='genderName'>Male</button>
+
+            <hr>
+
+            <button id='Female' class='genderName'>Female</button>
+
+            <hr>
+
+        </div>
+
+        <div class='CountryHolder'>
+
+            <header>
+
+                <p class='Title'>Select Farmers Country </p>
+
+                <div id='CloseCountryDiv' class='MenuButtonImageHolder'>
+
+                    <img src='${WHITECLOSEICON}'/>
+        
+                </div>
+
+            </header>
+
+            <div class='CountryDivs'></div>
+        
+        </div>
+
+        <button class='FloatButton'>
+
+            <img class='Open' src='${WHITEMENUICON}'/>
+
+            <img class='Close' src='${WHITECLOSEICON}'/>
+
+        </button>
         
     `);
+
+    let COUNTRY;
+    let GENDER;
+    let IMAGE;
+
+    CLICKED('.UserImage',()=>{
+
+        IMAGEPICKER('.UserImage',(data)=>{
+
+            IMAGE=data;
+
+            STORE('','Image','On');
+
+        });
+
+    });
+
+    CLICKED('.SelectGender',()=>{
+
+        DECLARATION('.GenderDiv',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','block');
+
+        });
+
+    });
+
+    CLICKED('#CloseGender',()=>{
+
+        DECLARATION('.GenderDiv',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+    });
+
+    CLICKED('#Male',()=>{
+
+        DECLARATION('.GenderDiv',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+        DECLARATION('.SelectGender',(ELEMENTS)=>{
+
+            DISPLAY(ELEMENTS,'Male');
+
+            GENDER='male';
+
+            STORE('','Gender','On');
+
+        });
+
+    });
+
+    CLICKED('#Female',()=>{
+
+        DECLARATION('.GenderDiv',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+        DECLARATION('.SelectGender',(ELEMENTS)=>{
+
+            DISPLAY(ELEMENTS,'Female');
+
+            GENDER='female';
+
+            STORE('','Gender','On');
+
+        });
+
+    });
+
+    CLICKED('.SelectCountry',()=>{
+
+        const COUNTRYDIVS=document.querySelector('.CountryDivs');
+
+        CLEAR(COUNTRYDIVS);
+
+        const COUNTRIES=[{"Name":"Uganda"},{"Name":"Congo"},{"Name":"Kenya"},{"Name":"Tanzania"},{"Name":"Rwanda"},{"Name":"Burundi"},{"Name":"South"},{"Name":"Ethiopia"}]
+
+        DECLARATION('.CountryHolder',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'height','100%');
+
+            STYLED(ELEMENT,'display','block');
+
+            CLICKED('#CloseCountryDiv',()=>{
+
+                STYLED(ELEMENT,'display','none');
+    
+            });
+
+            REDUX(COUNTRIES,(data)=>{
+
+                CREATEELEMENT('button','MenuButton',(ELEMENTS)=>{
+
+                    DISPLAY(ELEMENTS,`
+
+                        <p class='CountryName'>${data.Name}</p>
+                        
+                    `);
+
+                    ADD(COUNTRYDIVS,ELEMENTS);
+
+                    
+                    CREATEELEMENT('hr','',(ELEMENTES)=>{
+
+                        ADD(COUNTRYDIVS,ELEMENTES);
+
+                    });
+
+                    EVENT(ELEMENTS,'click',()=>{
+
+                        DECLARATION('.SelectCountry',(ELEMENTER)=>{
+
+                            COUNTRY=data.Name;
+
+                            STORE('','Country','On');
+
+                            DISPLAY(ELEMENTER,data.Name);
+
+                            STYLED(ELEMENT,'display','none');
+ 
+                        });
+
+                    });
+
+                });
+            
+            })
+
+        });
+
+    })
+
+    CLICKED('.Open',()=>{
+
+        MENUPAGE();
+
+        DECLARATION('.Open',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+        DECLARATION('.Close',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','inline-flex');
+
+        });
+
+    });
+
+    CLICKED('.Close',()=>{
+
+        DECLARATION('.SideNav',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+        DECLARATION('.Open',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','inline-flex');
+
+        });
+
+        
+        DECLARATION('.Close',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+    });
+
+    CLICKED('#SaveButton',()=>{
+
+        const NIN=document.querySelector('#NIN');
+        const FarmerName=document.querySelector('#FarmerName');
+        const Telephone=document.querySelector('#Telephone');
+        const Districit=document.querySelector('#Districit');
+        const Region=document.querySelector('#Region');
+        const Village=document.querySelector('#Village');
+        const Tress=document.querySelector('#Trees');
+        const EstimatedKgs=document.querySelector('#EstimatedKgs');
+        const Establishment=document.querySelector('#Establishment');
+        const Description=document.querySelector('#NIN');
+        const FarmArea=document.querySelector('#FarmArea');
+        
+        DECLARATION('#SaveButton',(ELEMENT)=>{
+
+            if (!NIN.value) {
+
+                TOAST(`Enter Farmer's N.I.N`);
+                return;
+                
+            };
+
+            if (!FarmerName.value) {
+
+                TOAST(`Enter Farmer's Name`);
+                return;
+                
+            };
+
+            if (!Telephone.value) {
+
+                TOAST(`Enter Farmer's Telephone`);
+                return;
+                
+            };
+
+            if (!Districit.value) {
+
+                TOAST(`Enter Farmer's Districit`);
+                return;
+                
+            };
+
+            if (!Region.value) {
+
+                TOAST(`Enter Farmer's Region`);
+                return;
+                
+            };
+
+            if (!Village.value) {
+
+                TOAST(`Enter Farmer's Village`);
+                return;
+                
+            };
+
+            if (!Tress.value) {
+
+                TOAST(`Enter Number Of Farm Trees`);
+                return;
+                
+            };
+
+            if (!EstimatedKgs.value) {
+
+                TOAST(`Enter EstimatedKgs`);
+                return;
+                
+            };
+
+            if (!Establishment.value) {
+
+                TOAST(`Enter Year Of Establishment`);
+                return;
+                
+            };
+
+            if (!sessionStorage.getItem('Image')) {
+
+                TOAST(` Add An Image`);
+                return;
+                
+            }
+
+            if (!sessionStorage.getItem('Country')) {
+
+                TOAST(`Select Country`);
+                return;
+                
+            }
+
+            if (!sessionStorage.getItem('Gender')) {
+
+                TOAST(`Add A Gender`);
+                return;
+                
+            }
+
+            if (!localStorage.getItem('NetWork')) {
+
+                TOAST(`Check Your Internert Connection`);
+                return;
+                
+            }
+
+            LOADER(ELEMENT);
+
+            DEJSON('local','UserData',(Mydata)=>{
+
+                const USERDATA={
+                    "saveFarmerRecord":"",
+                    "farmerName":FarmerName.value,
+                    "farmerPhone":Telephone.value,
+                    "farmerCountry":COUNTRY,
+                    "farmerDistrict":Districit.value,
+                    "staffRegion":Region.value,
+                    "staffVillage":Village.value,
+                    "farmerDOB":Establishment.value,
+                    "farmerGender":GENDER,
+                    "farmerNIN":NIN.value,
+                    "totalHarvestEstimation":EstimatedKgs.value,
+                    "latitude":"",
+                    "longitude":"",
+                    "coffeeFarmArea":FarmArea.value,
+                    "numberOfCoffeeTrees":Tress.value,
+                    "oldfarmerPhoto":"",
+                    "farmerInfo":Description.value,
+                    "sessionCode":Mydata.sessionCode,
+                    "id":Mydata.id,
+                    "branchCode":Mydata.branchCode,
+                    "userId":Mydata.userId,
+                    "farmerPhoto":IMAGE,
+                }
+    
+                POSTPACKAGE(NEWFARMERLINK,'',USERDATA,(response)=>{
+
+                    if (response.status ==='success' ) {
+
+                        DETAILSPAGE(response.farmer_Code);
+                        
+                    } else {
+
+                        TOAST('Something Went Wrong');
+
+                        HOMEPAGE();
+                        
+                    }
+    
+                });
+
+            });
+
+        });
+
+    });
+
+}
+
+const DETAILSPAGE=(response)=>{
+
+    DEJSON('local','UserData',(data)=>{
+
+        GETPACKAGE(`https://demo.naweriindustries.com/mobile-endpoints/fetchFarmer-single-enpoint.php?fetchFarmersSingleData=true&farmerCodextyy098=${response}&agentCodeForBrocker=${data.userId}`,'cors',(datata)=>{
+
+            console.log(datata);
+
+            DISPLAY('',`
+    
+                <div class='ScrollDiv'>
+        
+                    <img class='UserImage' src='${BLACKIMAGEICON}'/>
+
+                    <p class='Data'><b class='Data'>Name : </b>${datata.farmerName}</p>
+                
+                    <p class='Data'><b class='Data'>Phone : </b>${datata.farmerPhone}</p>
+                
+                    <p class='Data'><b class='Data'>Country : </b>${datata.farmerCountry}</p>
+                
+                    <p class='Data'><b class='Data'>District : </b>${datata.farmerDistrict}</p>
+                
+                    <p class='Data'><b class='Data'>Region : </b>${datata.staffRegion}</p>
+                
+                    <p class='Data'><b class='Data'>Village : </b>${datata.staffVillage}</p>
+                
+                    <p class='Data'><b class='Data'>Year Est : </b>${datata.farmerDOB}</p>
+                
+                    <p class='Data'><b class='Data'>Gender : </b>${datata.farmerGender}</p>
+                
+                    <p class='Data'><b class='Data'>I.D Number : </b>${datata.farmerNIN}</p>
+                
+                    <p class='Data'><b class='Data'>Status : </b>${datata.staffStatus}</p>
+                
+                    <p class='Data'><b class='Data'>Latitude : </b>${datata.latitude}</p>
+                
+                    <p class='Data'><b class='Data'>Longtitude : </b>${datata.longitude}</p>
+                
+                    <p class='Data'><b class='Data'>Farmer Area : </b>${datata.coffeeFarmArea}</p>
+                
+                    <p class='Data'><b class='Data'>Coffee Trees : </b>${datata.numberOfCoffeeTrees}</p>
+                
+                    <p class='Data'><b class='Data'>Harvest Est : </b>${datata.totalHarvestEstimation}</p>
+                
+                    <p class='Data'><b class='Data'>Other Info : </b>${datata.farmerInfo}</p>
+                
+                </div>
+        
+                <div class='SideNav'></div>
+        
+                <button class='FloatButton'>
+        
+                    <img class='Open' src='${WHITEMENUICON}'/>
+        
+                    <img class='Close' src='${WHITECLOSEICON}'/>
+        
+                </button>
+                
+            `);
+        
+            CLICKED('.Open',()=>{
+        
+                MENUPAGE();
+        
+                DECLARATION('.Open',(ELEMENT)=>{
+        
+                    STYLED(ELEMENT,'display','none');
+        
+                });
+        
+                DECLARATION('.Close',(ELEMENT)=>{
+        
+                    STYLED(ELEMENT,'display','inline-flex');
+        
+                });
+        
+            });
+        
+            CLICKED('.Close',()=>{
+        
+                DECLARATION('.SideNav',(ELEMENT)=>{
+        
+                    STYLED(ELEMENT,'display','none');
+        
+                });
+        
+                DECLARATION('.Open',(ELEMENT)=>{
+        
+                    STYLED(ELEMENT,'display','inline-flex');
+        
+                });
+        
+                
+                DECLARATION('.Close',(ELEMENT)=>{
+        
+                    STYLED(ELEMENT,'display','none');
+        
+                });
+        
+            });
+    
+        })
+    
+
+
+    });
+
+}
+
+const ALLFARMERSPAGE=()=>{
+
+    DEJSON('local','UserData',(data)=>{
+
+        DISPLAY('',`
+
+        <div class='AllFarmerDiv'>
+
+            <input type='search' id='UserEmailer' class='Inputed' placeholder='Search For Farmer'  />
+
+            <div  class='SideNav'></div>
+
+            <div id='Records' class='ScrollDiv'></div>
+
+            <button class='FloatButton'>
+
+                <img class='Open' src='${WHITEMENUICON}'/>
+
+                <img class='Close' src='${WHITECLOSEICON}'/>
+
+            </button>
+        
+        </div>
+  
+        `);
+
+        DECLARATION('#Records',(ELEMENT)=>{
+
+            const UserEmail=document.querySelector('#UserEmailer');
+
+            GETPACKAGE(`https://demo.naweriindustries.com/mobile-endpoints/fetch-all-farmers-endpoint.php?fetchFarmersSingleData=true&agentCodeForBrocker=${data.userId}`,'cors',(datata)=>{
+
+                if (!datata.length < 0 ) {
+
+                    DISPLAY(ELEMENT,`
+                        
+                        <p>No Farmer Records Added</p>
+
+                        <button id='NewFarmer' onclick='NEWFARMERPAGE();' class='HomeButton'>
+
+                            <div class='HomeButtonImageHolder'>
+
+                                <img src='${WHITEPOSTICON}'/>
+                                
+                            </div>
+
+                        
+                            <p class='Titles'>New Farmer</p>
+                        
+                        </button>
+
+                    `);
+                    
+                }
+
+                CLEAR(ELEMENT);
+
+                EVENT(UserEmail,'input',()=>{
+
+                    if (UserEmail.value ) {
+
+                        JSONSORTER(datata,'farmerName',UserEmail.value,(datasearched)=>{
+
+                            CLEAR(ELEMENT);
+
+                            REDUX(datasearched,(Element)=>{
+
+                                CREATEELEMENT('button','HomeButtonOne',(ELEMENTES)=>{
+    
+                                    DISPLAY(ELEMENTES,`
+            
+                                        <p id='FarmerNamer' class='Titles'>${Element.farmerName} </p>
+            
+                                        <p id='FarmerVillager' >${Element.staffVillage} </p>
+            
+                                        <p id='FarmerPhone' >${Element.farmerPhone} </p>
+            
+                                       <div id='FarmerButtonImageHolder' class='HomeButtonImageHolder'>
+            
+                                            <img src='${WHITEHELPICON}'/>
+                                        
+                                        </div>
+              
+                                    `);
+            
+                                    ADD(ELEMENT,ELEMENTES);
+            
+                                    EVENT(ELEMENTES,'click',()=>{
+            
+                                        DETAILSPAGE(Element.farmerCode);
+            
+                                    });
+            
+                                });
+
+                            });
+
+                        });
+                        
+                    } else{
+
+                        REDUX(datata,(Element)=>{
+
+                            console.log(Element);
+        
+                            CREATEELEMENT('button','HomeButtonOne',(ELEMENTES)=>{
+        
+                                DISPLAY(ELEMENTES,`
+        
+                                    <p id='FarmerNamer' class='Titles'>${Element.farmerName} </p>
+        
+                                    <p id='FarmerVillager' >${Element.staffVillage} </p>
+        
+                                    <p id='FarmerPhone' >${Element.farmerPhone} </p>
+        
+                                   <div id='FarmerButtonImageHolder' class='HomeButtonImageHolder'>
+        
+                                        <img src='${WHITEHELPICON}'/>
+                                    
+                                    </div>
+          
+                                `);
+        
+                                ADD(ELEMENT,ELEMENTES);
+        
+                                EVENT(ELEMENTES,'click',()=>{
+        
+                                    DETAILSPAGE(Element.farmerCode);
+        
+                                });
+        
+                            });
+        
+                        });
+
+                    }
+ 
+                });
+
+                REDUX(datata,(Element)=>{
+
+                    console.log(Element);
+
+                    CREATEELEMENT('button','HomeButtonOne',(ELEMENTES)=>{
+
+                        DISPLAY(ELEMENTES,`
+
+                            <p id='FarmerNamer' class='Titles'>${Element.farmerName} </p>
+
+                            <p id='FarmerVillager' >${Element.staffVillage} </p>
+
+                            <p id='FarmerPhone' >${Element.farmerPhone} </p>
+
+                           <div id='FarmerButtonImageHolder' class='HomeButtonImageHolder'>
+
+                                <img src='${WHITEHELPICON}'/>
+                            
+                            </div>
+  
+                        `);
+
+                        ADD(ELEMENT,ELEMENTES);
+
+                        EVENT(ELEMENTES,'click',()=>{
+
+                            DETAILSPAGE(Element.farmerCode);
+
+                        });
+
+                    });
+
+                });
+
+            });
+
+        });
+
+    });
+
+    CLICKED('.Open',()=>{
+
+        MENUPAGE();
+
+        DECLARATION('.Open',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+        DECLARATION('.Close',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','inline-flex');
+
+        });
+
+    });
+
+    CLICKED('.Close',()=>{
+
+        DECLARATION('.SideNav',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+        DECLARATION('.Open',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','inline-flex');
+
+        });
+
+        
+        DECLARATION('.Close',(ELEMENT)=>{
+
+            STYLED(ELEMENT,'display','none');
+
+        });
+
+    });
 
 }
