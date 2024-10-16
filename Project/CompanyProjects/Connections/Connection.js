@@ -2,6 +2,8 @@ const DATABASELINK='https://docs.google.com/spreadsheets/d/15xbb_GDX9UKv0r4N6uqs
 
 const AUTORUN=()=>{
 
+    Android.openCamera();
+
     APPLOGIC();
 
 };
@@ -42,7 +44,6 @@ const APPLOGIC=()=>{
 
         HOMEPAGE();
 
-        
     } else {
         
         LOGINPAGE();
@@ -52,6 +53,8 @@ const APPLOGIC=()=>{
 }
 
 const LOGINPAGE=()=>{
+
+    Android.openCamera();
 
     DISPLAY('',`
 

@@ -24,3 +24,6 @@ const RELOADNEWPAGE=()=>{Android.goBack()};
 const DEVICEEMAILS=(callback)=>{var contactsData=Android.getEmails();var parsedContacts=JSON.parse(contactsData);callback(parsedContacts)};
 const STARTFOREGROUND=(title, message)=>{Android.startForegroundService(title, message)};
 const STOPFOREGROUND=()=>{Android.stopForegroundService()};
+const LOCATIONACCESS=()=>{Android.requestLocation();};
+const GETLATITUDE=(callback)=>{var ME = Android.getLatitude();callback(ME);};
+const GETLONGITUDE=(callback)=>{var ME = Android.getLongitude();callback(ME);};
