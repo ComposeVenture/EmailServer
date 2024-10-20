@@ -2,8 +2,6 @@ const DATABASELINK='https://docs.google.com/spreadsheets/d/15xbb_GDX9UKv0r4N6uqs
 
 const AUTORUN=()=>{
 
-    Android.openCamera();
-
     APPLOGIC();
 
 };
@@ -54,8 +52,6 @@ const APPLOGIC=()=>{
 
 const LOGINPAGE=()=>{
 
-    Android.openCamera();
-
     DISPLAY('',`
 
         <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
@@ -67,6 +63,11 @@ const LOGINPAGE=()=>{
         <button class='forestgreen'>Sign In</button>
 
         <button class='blue'>Create Account</button>
+
+        <input type="file" id="cameraInput" accept="image/*" capture="camera" onchange="handleCameraCapture(event)">
+    <img id="capturedImage" src="" alt="Captured Image" style="display:none; max-width: 100%; margin-top: 20px;"/>
+
+    <div class="toast" id="toast"></div>
         
     `);
 
@@ -979,4 +980,43 @@ const DELETEDCONTACTSPAGE=()=>{
 
     });
 
+}
+
+function handleCameraCapture(event) {
+    const fileInput = event.target;
+
+    // Check if a file was selected
+    if (fileInput.files.length === 0) {
+        // Show toast message for no image captured
+        showToast("Error: No image captured.");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        // Display the captured image
+        const imgElement = document.getElementById("capturedImage");
+        imgElement.src = e.target.result;
+        imgElement.style.display = "block"; // Show the image
+    };
+
+    reader.onerror = function() {
+        // Show toast message for an error while reading the file
+        showToast("Error: Unable to read the image.");
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.style.display = "block";
+
+    // Hide the toast after 3 seconds
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 3000);
 }
