@@ -34,6 +34,8 @@ const AUTORUN=()=>{
 
 const ITEMSDOWNLOAD=()=>{
 
+    APPLOADUPDATER(NAME);
+
     if (localStorage.getItem('NetWork')) {
 
         GETDATA(DATABASELINK,'Winksta',(data)=>{
@@ -822,6 +824,7 @@ const PRICEPAGE=(data)=>{
                     <button id='AddCartButton'>
 
                         <img  src='${WHITECARTICON}'/>
+
                         <p id='add2cartTitle'>Add to cart</p>
                 
                     </button>
@@ -842,33 +845,57 @@ const PRICEPAGE=(data)=>{
 
     CLICKED('#BuyNowButton',()=>{
 
-        DECLARATION('#BuyNowButton',(ELEMENT)=>{
+        DISPLAY('',`
 
-            LOADER(ELEMENT);
+           <header>
 
-            DEJSON('local','MyUserData',(info)=>{
+                <img class='BackIcon' src='${WHITEBACKICON}'/>
 
-                TOKENIZATION(info.UserEmail,'https://composeventure.github.io/Compose-Pay/',data.ProductPrice,(PayLink)=>{
-                    
-                    DISPLAY('',`
+                <p class='ProductName'>${data.ProductName}</p>
+                
+            </header>
 
-                        <header>
+            <img id='PriceImage' class='Images' src='${data.ProductImage}'/>
 
-                            <img class='BackIcon' id='closeBack'  src='${WHITEBACKICON}'/>
+            <h3 id='Purchase'>Purchase From </h3>
 
-                            <p class='ProductName'>${data.ProductName}</p>
-                        
-                        </header>
+            <button id='PayApp' class='forestgreen'>App</button>
 
-                        <div class='UserDiv'>
+            <button id='PayShop' class='forestgreen' >Shop</button>
 
-                            <iframe src='${PayLink}' ></iframe>
-                        
-                        </div>
-                        
-                    `);
+        `);
 
-                    CLICKED('#closeBack',()=>{PRICEPAGE(data)})
+        CLICKED('.BackIcon',()=>{
+
+            PRICEPAGE(data);
+
+        });
+
+        CLICKED('#PayShop',()=>{
+
+            DEJSON('local','MyUserData',(MyUserData)=>{
+
+                DECLARATION('#PayShop',(ELEL)=>{
+
+                    LOADER(ELEL);
+
+                    TOKENIZATION(MyUserData.UserEmail,'https://github.com/ComposeVenture/ChurchProject',data.ProductPrice,(datalnk)=>{
+
+                        DISPLAY('',`
+
+                            <header>
+
+                                <img class='BackIcon' src='${WHITEBACKICON}'/>
+
+                                <p class='ProductName'>${data.ProductName}</p>
+                                
+                            </header>
+
+                            <iframe src='${datalnk}'/>
+                            
+                        `);
+
+                    });
 
                 });
 
@@ -877,6 +904,7 @@ const PRICEPAGE=(data)=>{
         });
 
     });
+
 };
 
 const HOMEDATADISPLAY=(ELEMENTED,ITEM)=>{

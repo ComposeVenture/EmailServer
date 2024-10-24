@@ -378,3 +378,17 @@
     background: #8f7bb4;
     bottom: 0;
 }
+
+.PayDiv{
+    background: #8f7bb4 ;
+}
+
+#PriceImage{
+    position: relative;
+    height: 40%;
+    top: 7%;
+}
+
+#Purchase{
+    margin-top: 20%;
+}

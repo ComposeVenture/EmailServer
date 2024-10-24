@@ -63,11 +63,6 @@ const LOGINPAGE=()=>{
         <button class='forestgreen'>Sign In</button>
 
         <button class='blue'>Create Account</button>
-
-        <input type="file" id="cameraInput" accept="image/*" capture="camera" onchange="handleCameraCapture(event)">
-    <img id="capturedImage" src="" alt="Captured Image" style="display:none; max-width: 100%; margin-top: 20px;"/>
-
-    <div class="toast" id="toast"></div>
         
     `);
 
