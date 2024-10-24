@@ -1,92 +1,212 @@
+const DATABASELINKURL='https://docs.google.com/spreadsheets/d/1kd15tCp1cX6TIUSsm3GcrfxDvOrmqlTNxAaseR8LBhw/edit';
+
+const UPDATELINK='';
+
 const AUTORUN=()=>{
 
-    LOGICPAGE();
+    APPLOGIC();
 
-}
+    APPSDOWNLOAD();
 
-const LOGICPAGE=()=>{
+};
 
-    if (localStorage.getItem('UserData')) {
+const APPSDOWNLOAD=()=>{
 
-        HOMEPAGE();
+    NETWORKED();
 
-        return;
+    setTimeout(() => {
+
+        if (localStorage.getItem('NetWork')) {
+
+            APPLOADUPDATER(NAME);
+    
+            DATABASESAVER(DATABASELINKURL,'Store','ComposeStore','Apps',(data)=>{
+    
+                if (data === false ) {
         
-    }
+                    DATABASEUPDATER(DATABASELINKURL,'Store','ComposeStore','Apps');
+                    
+                } else {
+        
+                    HOMEPAGE();
+                    
+                };
+        
+            });
+    
+        };
 
-    LOGINPAGE();
+    }, 1000);
+
+};
+
+const APPLOGIC=()=>{
+
+    HOMEPAGE();
 
 }
 
 const HOMEPAGE=()=>{
 
-}
+    DISPLAY('',`
 
-const LOGINPAGE=()=>{
+        <div class='HomeDiv'></div>
+
+        <footer>
+
+            <img onclick='APPSPAGE()' src='${WHITESEARCHICON}'/>
+
+            <img onclick='USERACCOUNTPAGE()' src='${WHITEUSERHOLDERICON}'/>
+
+        </footer>
+        
+    `);
+
+    DECLARATION('.HomeDiv',(ELEMENT)=>{
+
+        LOADER(ELEMENT,'HomeLoader');
+
+        CLEAR(ELEMENT);
+
+        DATAGETTER('ComposeStore','Apps',(data)=>{
+
+            CREATEELEMENT('div','HomeMiniAppDiv',(ELEMENTE)=>{
+
+                DISPLAY(ELEMENTE,`
+
+                    <img class='AppImage' src='${data.AppImage}'/>
+                    
+                `);
+
+                CREATEELEMENT('button','DownloadButton',(BUTTON)=>{
+
+                    DISPLAY(BUTTON,'Get');
+                    
+                    ADD(ELEMENTE,BUTTON);
+
+                    EVENT(BUTTON,'click',()=>{
+
+                        WEBSITE(data.AppLink);
+
+                    });
+
+                });
+
+                CREATEELEMENT('p','AppName',(BUTTON)=>{
+
+                    DISPLAY(BUTTON,data.AppName);
+                    
+                    ADD(ELEMENTE,BUTTON);
+
+                    EVENT(BUTTON,'click',()=>{
+
+                        APPDETAILSPAGE(data);
+
+                    });
+
+                });
+
+                ADD(ELEMENT,ELEMENTE);
+
+            });
+    
+        });
+
+    });
+
+};
+
+const USERACCOUNTPAGE=()=>{
 
     DISPLAY('',`
+
+        <header>
+
+            <img onclick='HOMEPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
+
+            <img onclick='SETTINGSPAGE()' class='RightIcon' src='${WHITESETTINGICON}'/>
         
-        <img class='AppLogo' src='${localStorage.getItem('AppIcon')}'/>
+        </header>
+        
+    `)
 
-        <p>Your Home Cinema</p>
+};
 
-        <input type='email' id='UserEmail' class='Input' placeholder='Enter Your Email' >
+const APPSPAGE=()=>{
 
-        <input type='password' id='UserPassword' class='Input' placeholder='********' >
+    DISPLAY('',`
 
-        <p class='ForgotPassword'>Forgot My Password?</p>
+        <header>
 
-        <button class='forestgreen'>Login</button>
+            <img onclick='HOMEPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
 
-        <p class='CreateMessage' >I don't have an Account! <b class='colorforestgreen' >Create Account?<b></p>
+            <img onclick='HOMEPAGE()' class='RightIcon' src='${WHITEAPPICON}'/>
+        
+        </header>
+        
+    `);
 
+};
+
+const APPDETAILSPAGE=(data)=>{
+
+    DISPLAY('',`
+
+        <header>
+
+            <img onclick='HOMEPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
+
+            <p class='RightText'>${data.AppName}</p>
+        
+        </header>
+
+        <div class='UserDetailsDIv'>
+
+            <div class='HomeMiniAppDiv'>
+
+                <img class='AppImage' src='${data.AppImage}'/>
+            
+            </div>
+
+            <button class='forestgreen'>Download</button>
+
+            <p class='AppDetails'>${data.AppDetails}</p>
+        
+        </div>
+        
     `);
 
     CLICKED('.forestgreen',()=>{
 
-        DECLARATION('.forestgreen',(ELEMENT)=>{
+        WEBSITE(data.AppLink);
 
-            DECLARATION('#UserEmail',(USEREMAIL)=>{
+    });
 
-                CHECKER(USEREMAIL.value,()=>{
+}
 
-                    STORE('','UserEmail',USEREMAIL.value);
+const SETTINGSPAGE=()=>{
 
-                    return;
+    DISPLAY('',`
 
-                });
+        <header>
 
-                STYLED(USEREMAIL,'border','1px solid red');
-    
-                HIDER(1000,()=>{
+            <img onclick='USERACCOUNTPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
 
-                    STYLED(USEREMAIL,'border','1px solid #cdcdcd20');
+            <p class='RightText'>Preference</p>
+        
+        </header>
 
-                });
+        <div class='SettingsDiv'>
 
-            });
-    
-            DECLARATION('#UserPassword',(USERPASSWORD)=>{
-    
-                CHECKER(USERPASSWORD.value,()=>{
+            <button id='UpdateApp' class='forestgreen'>Update App</button>
+        
+        </div>
+        
+    `);
 
-                    STORE('','UserPassword',USERPASSWORD.value);
+    CLICKED('#UpdateApp',()=>{
 
-                    return;
-    
-                });
-
-                STYLED(USERPASSWORD,'border','1px solid red');
-    
-                HIDER(1000,()=>{
-    
-                    STYLED(USERPASSWORD,'border','1px solid #cdcdcd20');
-    
-                });
-
-            });
-
-        });
+        WEBSITE(UPDATELINK);
 
     });
 
