@@ -1,6 +1,6 @@
 const DATABASELINKURL='https://docs.google.com/spreadsheets/d/1kd15tCp1cX6TIUSsm3GcrfxDvOrmqlTNxAaseR8LBhw/edit';
 
-const UPDATELINK='';
+const UPDATELINK='https://composeventure.github.io/SERVER/Store/compose_store.apk';
 
 const AUTORUN=()=>{
 

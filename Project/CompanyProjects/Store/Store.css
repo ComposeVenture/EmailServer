@@ -68,3 +68,8 @@
     text-align: left;
     padding: 2%;
 }
+
+.SettingsDiv{
+    top: 50px;
+    overflow-y: auto;
+}

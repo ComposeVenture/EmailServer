@@ -1,4 +1,6 @@
-const DATABASELINK='https://docs.google.com/spreadsheets/d/1kd15tCp1cX6TIUSsm3GcrfxDvOrmqlTNxAaseR8LBhw/edit';
+const DATABASELINKURL='https://docs.google.com/spreadsheets/d/1kd15tCp1cX6TIUSsm3GcrfxDvOrmqlTNxAaseR8LBhw/edit';
+
+const UPDATELINK='https://composeventure.github.io/SERVER/Store/compose_store.apk';
 
 const AUTORUN=()=>{
 
@@ -16,13 +18,13 @@ const APPSDOWNLOAD=()=>{
 
         if (localStorage.getItem('NetWork')) {
 
-            APPLOADUPDATER('AppStore');
+            APPLOADUPDATER(NAME);
     
-            DATABASESAVER(DATABASELINK,'Store','ComposeStore','Apps',(data)=>{
+            DATABASESAVER(DATABASELINKURL,'Store','ComposeStore','Apps',(data)=>{
     
                 if (data === false ) {
         
-                    DATABASEUPDATER(DATABASELINK,'Store','ComposeStore','Apps');
+                    DATABASEUPDATER(DATABASELINKURL,'Store','ComposeStore','Apps');
                     
                 } else {
         
@@ -122,7 +124,7 @@ const USERACCOUNTPAGE=()=>{
 
             <img onclick='HOMEPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
 
-            <img onclick='HOMEPAGE()' class='RightIcon' src='${WHITESETTINGICON}'/>
+            <img onclick='SETTINGSPAGE()' class='RightIcon' src='${WHITESETTINGICON}'/>
         
         </header>
         
@@ -177,6 +179,34 @@ const APPDETAILSPAGE=(data)=>{
     CLICKED('.forestgreen',()=>{
 
         WEBSITE(data.AppLink);
+
+    });
+
+}
+
+const SETTINGSPAGE=()=>{
+
+    DISPLAY('',`
+
+        <header>
+
+            <img onclick='USERACCOUNTPAGE()' class='BackIcon' src='${WHITEBACKICON}'/>
+
+            <p class='RightText'>Preference</p>
+        
+        </header>
+
+        <div class='SettingsDiv'>
+
+            <button id='UpdateApp' class='forestgreen'>Update App</button>
+        
+        </div>
+        
+    `);
+
+    CLICKED('#UpdateApp',()=>{
+
+        WEBSITE(UPDATELINK);
 
     });
 
