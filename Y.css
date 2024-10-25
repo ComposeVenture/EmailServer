@@ -1,0 +1,16 @@
+.HomeDiv{
+    background: transparent;
+    overflow-y: auto;
+}
+
+.FloatButton{
+    position: fixed;
+    background: teal;
+    width: 50px;
+    height: 50px;
+    bottom: 30px;
+    right:2%;
+    border-radius: 50px;
+    display: inline-flex;
+    left: auto;
+}

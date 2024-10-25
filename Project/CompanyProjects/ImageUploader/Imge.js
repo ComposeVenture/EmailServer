@@ -1,8 +1,24 @@
 const AUTORUN=()=>{
 
+    NETWORKED();
+
     HOMEPAGE();
 
+    APPLOGIC();
+
 };
+
+const APPLOGIC=()=>{
+
+    HIDER(2000,()=>{
+
+        CHECKER(localStorage.getItem('NetWork',()=>{
+            APPLOADUPDATER(NAME);
+        }));
+        
+    });
+
+}
 
 const HOMEPAGE=()=>{
 

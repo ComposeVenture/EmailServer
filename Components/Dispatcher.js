@@ -52,7 +52,6 @@ var myHeaders = new Headers();
     }).catch(error => console.log('error', error));
     
 };
-const HIDER=(TIME,callback)=>{setTimeout(() => {callback()},TIME );};
 
 const PAYWAY = () => {
     var myHeaders = new Headers();

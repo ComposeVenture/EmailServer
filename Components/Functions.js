@@ -8,7 +8,7 @@ const CAL = (NUM, SIGN, NUM1, callback) => { let answer; switch (SIGN) { case '+
 const CALL=(NUMBER)=>{ const phoneNumber = NUMBER; window.location.href = 'tel:' + phoneNumber;};
 const CLASS=(ELEMENT,ID)=>{ELEMENT.classList.add(ID)};
 const CHECK=(ELEMENT,ACTION)=>{const result=ELEMENT;return ACTION(result ? result:false)};
-const CHECKER=(ELEMENT,callback)=>{if (ELEMENT) {callback()};return;};
+const CHECKER=(element,callback)=>{if(element)callback()};
 const CLEAR=(ELEMENT)=>{CONDITION(ELEMENT,()=>DISPLAY(ELEMENT,''),()=>DISPLAY(document.body,''))};
 const CLEARSTORAGE=(data)=>{CONDITION(data,()=>localStorage.clear(),()=>sessionStorage.clear())};
 const CLICKED=(selector,callback)=>{const element=document.querySelector(selector);EVENT(element,"click",()=>{callback()})};
