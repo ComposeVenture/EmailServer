@@ -53,3 +53,35 @@ var myHeaders = new Headers();
     
 };
 const HIDER=(TIME,callback)=>{setTimeout(() => {callback()},TIME );};
+
+const PAYWAY = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Accept", "application/json");
+
+    var raw = JSON.stringify({
+        "consumer_key": "vvOhTSA4GBwtE6qkMuVq8hwNXMHOLxaO",
+        "consumer_secret": "28GnlDzP3k/JkdAmUCgEkU8RD7k="
+    });
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        mode:"no-cors",
+        body: raw,
+        redirect: 'follow'
+    };
+
+    fetch("https://pay.pesapal.com/v3", requestOptions)
+        .then(response => {
+            // Check if the response is ok (status in the range 200-299)
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Parse JSON response
+        })
+        .then(result => {
+            console.log(result); // Log the result
+        })
+        .catch(error => console.log('error', error));
+};
