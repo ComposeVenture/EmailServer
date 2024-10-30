@@ -6,10 +6,37 @@
 .FloatButton{
     position: fixed;
     background: teal;
-    width: 15%;
-    bottom: 0;
+    width: 50px;
+    height: 50px;
+    bottom: 30px;
     right:2%;
     border-radius: 50px;
     display: inline-flex;
     left: auto;
+}
+
+.HomeDiv{
+    background: transparent;
+    top: 50px;
+    overflow-y: auto;
+}
+
+.ImagesHolder{
+    background: #1a1c6b50;
+    width: 98%;
+    border-radius: 5px;
+    left: 1%;
+    margin: auto;
+}
+
+#Single{
+    bottom: 100px;
+}
+
+.RightedText{
+    
+    font-size: 20px;
+    margin: auto;
+    margin-left: auto;
+    margin-right: 0.5rem;
 }

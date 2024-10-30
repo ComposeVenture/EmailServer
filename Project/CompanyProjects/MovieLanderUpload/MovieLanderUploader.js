@@ -1,4 +1,4 @@
-const SHEETURL = 'https://docs.google.com/spreadsheets/d/1IbSB2xrDMuUy56NvR7a7_nGScEP3iV_8LjNavN8EGHY/edit';
+const SHEETURLI = 'https://docs.google.com/spreadsheets/d/1nUPpLO_Q_LDzIlA4AnaAu2Y87nZ3MbPN14xQD6jBHR0/edit?gid=0#gid=0';
 
 const AUTORUN = () => {
     HOMEPAGE();
@@ -7,7 +7,7 @@ const AUTORUN = () => {
 
 const DOWNLOADMOVIES = () => {
 
-    GETDATA(SHEETURL, 'Movies', (data) => {
+    GETDATA(SHEETURLI, 'MovieLander', (data) => {
 
         const DATA={
             "Name":"Movies",
@@ -109,8 +109,7 @@ const POSTMOVIESPAGE = () => {
             <input type='text' id='MovieCatergory' class='Input' placeholder='Enter Movie Category' />
             <input type='text' id='MovieLink' class='Input' placeholder='Enter Movie Link' />
             <textarea class='AboutMovie' placeholder='About Movie'></textarea>
-            <p class='colorteal'>Add Movie Image</p>
-            <img class='Imaged'/>
+            <img class='Imaged' src='${BLACKIMAGEICON}' />
             <button class='gray'>Parental Controlled</button>
             <button class='blue'>Paid</button>
             <button class='forestgreen'>Upload Movie</button>
@@ -124,7 +123,7 @@ const POSTMOVIESPAGE = () => {
 
     var IMAGEDATA;
 
-    CLICKED('.colorteal', () => {
+    CLICKED('.Imaged', () => {
         IMAGEPICKER('.Imaged', (data) => {
             IMAGEDATA=data;
             STORE('', 'Image', data);
@@ -180,9 +179,9 @@ const POSTMOVIESPAGE = () => {
 
             LOADER(ELEMENT);
 
-            INSERTDATA(SHEETURL, 'Movies', HEADERS, DATA, (data) => {
+            INSERTDATA(SHEETURLI, 'MovieLander', HEADERS, DATA, (data) => {
             
-                GETDATA(SHEETURL, 'Movies', (data) => {
+                GETDATA(SHEETURLI, 'MovieLander', (data) => {
 
                     const DATA={
                         "Name":"Movies",
