@@ -25,6 +25,14 @@
     height: 32px;
 }
 
+
+.LeftedText{
+    text-align: left;
+    left: 2%;
+    margin-top: 0;
+    margin-bottom: 0.1%;
+}
+
 .MyData{
     width: 98%;
     position: relative;
@@ -32,16 +40,6 @@
     background: #cdcdcd10;
     left: 1%;
     border-radius: 10px;
-}
-
-.MyContacts{
-    top: 24%;
-    overflow-y: auto;
-    width: 98%;
-    left: 1%;
-    bottom: 10px;
-    background: transparent;
-    border-radius: 5px;
 }
 
 .HomeUserImage{
@@ -76,14 +74,6 @@
     border-radius: 100px;
 }
 
-.RightText{
-    margin-right: 1rem;
-    margin-top: auto;
-    margin-left: auto;
-    margin-bottom: auto;
-    font-size: 18px;
-}
-
 .ContactDiv{
     top: 55px;
     overflow-y: auto;
@@ -108,15 +98,13 @@
     object-fit: cover;
 }
 
-.HomeContacts{
-    position: relative;
+.MyContacts{
+    top: 24%;
+    overflow-y: auto;
     width: 98%;
     left: 1%;
+    bottom: 10px;
     background: transparent;
-    border: 1px solid #cdcdcd10;
-    height: 20%;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
     border-radius: 5px;
 }
 
@@ -127,9 +115,15 @@
     left: 1%;
     border-radius: 5px;
     background: transparent;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
     border: 1px solid #cdcdcd10;
+}
+
+.ContactDiv{
+    top: 55px;
+    overflow-y: auto;
+    background: transparent;
 }
 
 .contactUserImage{
@@ -148,7 +142,6 @@
     height: 100%;
     object-fit: cover;
 }
-
 
 .ContactName{
     text-align: left;
@@ -174,6 +167,14 @@
     text-align: left;
     left: 40%;
     margin-bottom: 1em;
+}
+
+.RightText{
+    margin-right: 1rem;
+    margin-top: auto;
+    margin-left: auto;
+    margin-bottom: auto;
+    font-size: 18px;
 }
 
 .NumberDiv{
@@ -224,4 +225,8 @@
     background: red;
     padding: 4%;
     border-radius: 10px;
+}
+
+.CreateDiv{
+    overflow-y: auto;
 }

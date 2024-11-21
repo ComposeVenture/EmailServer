@@ -1,0 +1,115 @@
+.RoundHeader{
+    position: relative;
+    border-radius: 0px 0px 30px 30px;    
+    background: #cdcdcd09;
+    margin-top: 1%;
+}
+
+.Home_Div{
+    overflow-y: auto;
+    background: transparent;
+}
+
+.HomeDiv{
+    position: relative;
+    background: transparent;
+    overflow-y: auto;
+}
+
+.LatestApps{
+    position: relative;
+    width: 95%;
+    height: 150px;
+    margin: auto;
+    margin-bottom: 1rem;
+    margin-left: 0.3rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    background: #cdcdcd09;
+    border: 1px solid  #cdcdcd20;  
+    display: inline-flex;
+}
+
+.AppImage{
+    width: 35%;
+    height: 100%;
+    margin-left: 0rem;
+}
+
+.AppNamei{
+    position: absolute;
+    right: 0;
+    font-size: 20px;
+    margin-right: 1rem;
+    margin-top: 0.5rem;
+    text-align: right;
+}
+
+.InstallButton{
+    position: absolute;
+    bottom: 1%;
+    background: forestgreen;
+    width: auto;
+    right: 5%;
+    padding: 1%;
+    left: auto;
+    height: 30px;
+}
+
+.HomeTitles{
+    margin: auto;
+    font-size: 18px;
+}
+
+.DetailsButton{
+    position: absolute;
+    bottom: 1%;
+    background: forestgreen;
+    width: auto;
+    right: 30%;
+    padding: 1%;
+    left: auto;
+    height: 30px;
+}
+
+.RightText{
+    font-size: 18px;
+    margin: auto;
+    margin-right: 5%;
+}
+
+.HomeHolder{
+    background: transparent;
+    top: 50px;
+    overflow-y: auto;
+}
+
+.AppImager{
+    width: 98%;
+    height: 50%;
+    left: 1%;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+.ImageHolder{
+    position: relative;
+    width: 95%;
+    margin: auto;
+    height: 30%;
+    background: transparent;
+    margin-top: 2%;
+    margin-left: 1%;
+    overflow-x: auto;
+    border-radius: 10px;
+    display: inline-flex;
+}
+
+.Images{
+    width: 50%;
+    margin: auto;
+    margin-left: 1%;
+    margin-right: 2%;
+    height: 100%;
+    flex-shrink: 0;
+}

@@ -1,40 +1,16 @@
-const DATABASELINK='https://docs.google.com/spreadsheets/d/15xbb_GDX9UKv0r4N6uqsEl8SInRRyyiDT9vs7JJP6qU/edit';
+const SHEETSLINKS='https://docs.google.com/spreadsheets/d/15xbb_GDX9UKv0r4N6uqsEl8SInRRyyiDT9vs7JJP6qU/edit';
 
 const AUTORUN=()=>{
 
+    setInterval(() => {
+
+        NETWORKED();
+
+    }, 2000);
+
     APPLOGIC();
 
-};
-
-const APPSDOWNLOAD=(APPNAMER,STORE,TABLE)=>{
-
-    NETWORKED();
-
-    setTimeout(() => {
-
-        if (localStorage.getItem('NetWork')) {
-
-            APPLOADUPDATER(NAME);
-    
-            DATABASESAVER(DATABASELINK,APPNAMER,STORE,TABLE,(data)=>{
-    
-                if (data === false ) {
-        
-                    DATABASEUPDATER(DATABASELINK,APPNAMER,STORE,TABLE);
-                    
-                } else {
-        
-                    APPLOGIC();
-                    
-                };
-        
-            });
-    
-        };
-
-    }, 1000);
-
-};
+}
 
 const APPLOGIC=()=>{
 
@@ -43,353 +19,54 @@ const APPLOGIC=()=>{
         HOMEPAGE();
 
     } else {
-        
-        LOGINPAGE();
+
+        if (localStorage.getItem('MyData')) {
+
+            LOGINACCOUNTVERIFICATIONPAGE();
+            
+        } else {
+
+            if (localStorage.getItem('User')) {
+                
+                EMAILVERIFICATIONPAGE();
+
+            } else {
+                
+                LOGINPAGE();
+
+            }
+
+        };
 
     }
     
+    HIDER(3000,()=>{
+
+        APPLOADUPDATER(NAME);
+
+    });
+
 }
-
-const LOGINPAGE=()=>{
-
-    DISPLAY('',`
-
-        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
-
-        <p>Cloud Storage For Your Contacts</p>
-
-        <input type='email' id='Email' class='Input' placeholder='Enter Email' />
-
-        <button class='forestgreen'>Sign In</button>
-
-        <button class='blue'>Create Account</button>
-        
-    `);
-
-    CLICKED('.blue',()=>{
-
-        CREATEACCOUNTPAGE();
-
-    });
-
-    DECLARATION('.forestgreen',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'click',()=>{
-
-            DECLARATION('#Email',(EMAILINPUT)=>{
-
-                if (!EMAILINPUT.value) {
-
-                    TOAST('Enter Email');
-
-                    return;
-                    
-                }
-
-                LOADER(ELEMENT);
-
-                GETDATA(DATABASELINK,'Users',(data)=>{
-
-                    FINDER(data,'UserEmail',EMAILINPUT.value,(users)=>{
-                        
-                        if (users.UserEmail === EMAILINPUT.value ) {
-
-                            JSONIFICATION(users,(MyData)=>{
-
-                                STORE('local','UserData',MyData);
-
-                                APPSDOWNLOAD(EMAILINPUT.value,'Connections','Contacts');
-                              
-                               
-                            });
-                            
-                        }else{
-
-                            TOAST('No User Account Found');
-
-                            ORIGIN(ELEMENT,'Sign In');
-    
-                        }
-
-                    });
-
-                });
-
-            });
-
-        });
-
-    });
-
-};
-
-const CREATEACCOUNTPAGE=()=>{
-
-    DISPLAY('',`
-
-        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
-
-        <p>Cloud Storage For Your Contacts</p>
- 
-        <input type='text' id='Name' class='Input' placeholder='Enter Name' />
-
-        <input type='email' id='Email' class='Input' placeholder='Enter Email'/>
-
-         <input type='tel' id='Code' maxlength='6'  class='Input' placeholder='Enter Pin Code'/>
-
-        <button class='forestgreen'>Sign Up</button>
-
-        <button class='blue'>LogIn</button>
-        
-    `);
-
-    CLICKED('.blue',()=>{
-
-        LOGINPAGE();
-
-    });
-
-    DECLARATION('.forestgreen',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'click',()=>{
-
-            DECLARATION('#Name',(EMAILINPUTONE)=>{
-
-                if (!EMAILINPUTONE.value) {
-
-                    TOAST('Enter User Name');
-
-                    return;
-                    
-                };
-
-                DECLARATION('#Email',(EMAILINPUT)=>{
-
-                    if (!EMAILINPUT.value) {
-    
-                        TOAST('Enter Email');
-    
-                        return;
-                        
-                    }
-
-                    DECLARATION('#Code',(EMAILINPUTTWO)=>{
-
-                        if (!EMAILINPUT.value) {
-        
-                            TOAST('Enter Pin Code');
-        
-                            return;
-                            
-                        };
-
-                        LOADER(ELEMENT);
-
-                        GETDATA(DATABASELINK,'Users',(data)=>{
-
-                            RANDOMCODE((code)=>{
-
-                                const DATA={
-                                    "UserName":EMAILINPUTONE.value,
-                                    "UserEmail":EMAILINPUT.value,
-                                    "UserPassword":EMAILINPUTTWO.value,
-                                    "UserCode":code
-                                }
-
-                                POSTMAIL(EMAILINPUT.value,'Connections Account Creation',`Dear ${EMAILINPUT.value} \n Your Verification Code is ${code}`,(response)=>{
-
-                                    JSONIFICATION(DATA,(user)=>{
-
-                                        STORE('local','User',user);
-
-                                        EMAILVERIFICATIONPAGE();
-
-                                        return;
-
-                                    })
-
-                                });
-
-                            });
-
-                        });
-        
-                    });
-    
-                });
-
-            });
-
-        });
-
-    });
-
-};
-
-const EMAILVERIFICATIONPAGE=()=>{
-
-    DISPLAY('',`
-
-        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
-
-        <p>Cloud Storage For Your Contacts</p>
-
-        <input type='tel' maxlength='6' id='Code' class='Input' placeholder='Enter Verification Code' />
-
-        <button class='forestgreen'>Verify</button>
-
-        <button class='blue'>Cancel</button>
-        
-    `);
-
-    CLICKED('.blue',()=>{
-
-        DELETESTORAGE('local','User');
-
-        AUTORUN();
-
-    });
-
-    DECLARATION('.forestgreen',(ELEMENT)=>{
-
-        EVENT(ELEMENT,'click',()=>{
-
-            DECLARATION('#Code',(EMAILINPUT)=>{
-
-                if (!EMAILINPUT.value) {
-
-                    TOAST('Enter Verification Code');
-
-                    return;
-                    
-                }
-
-                DEJSON('local','User',(Mydata)=>{
-
-                    if (EMAILINPUT.value !== Mydata.UserCode  ) {
-
-                        TOAST('Invalid Verification Code');
-    
-                        return;
-                        
-                    };
-    
-                    LOADER(ELEMENT);
-
-                    GETDATA(DATABASELINK,'Users',(data)=>{
-    
-                        FINDER(data,'UserEmail',Mydata.UserEmail,(users)=>{
-                            
-                            if (users.UserEmail === Mydata.UserEmail ) {
-    
-                                TOAST('User Account Found');
-
-                                ORIGIN(ELEMENT,'Verify');
-    
-                                return;
-                                
-                            };
-
-                            const HEADER=['UserName','UserEmail','UserPassword','CreatedOn','Device'];
-
-                            TIMENOW((time)=>{
-
-                                DEVICED((device)=>{
-
-                                    const DATA=[Mydata.UserName,Mydata.UserEmail,Mydata.UserPassword,time,device]
-
-                                    INSERTDATA(DATABASELINK,'Users',HEADER,DATA,(data)=>{
-
-                                        CREATETABLE(DATABASELINK,Mydata.UserEmail,(datata)=>{
-
-                                            GETDATA(DATABASELINK,'Users',(datate)=>{
-    
-                                                FINDER(datate,'UserEmail',Mydata.UserEmail,(users)=>{
-                                                    
-                                                    if (users.UserEmail === Mydata.UserEmail ) {
-
-                                                        JSONIFICATION(users,(Users)=>{
-
-                                                            DELETESTORAGE('local','User');
-
-                                                            STORE('local','UserData',Users);
-
-                                                            DATABASESAVER(DATABASELINK,Mydata.UserEmail,'Connections','Contacts',(data)=>{
-
-                                                                if (data === true ) {
-                                                        
-                                                                    HOMEPAGE();
-                            
-                                                                    return;
-                                                                    
-                                                                };
-                                                        
-                                                            });
-                                                        
-                                                        });
-                            
-                                                    };
-                                                });
-
-                                            });
-
-                                        });
-                                        
-                                    });
-
-                                });
-
-                            });
-
-                            return;
-    
-                        });
-    
-                    });
-
-                });
-
-            });
-
-        });
-
-    });
-
-};
 
 const HOMEPAGE=()=>{
 
-    DISPLAY('',`
+    USERMONITORING();
 
-        <header class='Header' >
+    HOMENUMBERS();
+
+    DEJSON('local','UserData',(data)=>{
+
+        DISPLAY('',`
+
+            <header class='Header' >
             
-            <input type='search' class='SearchInput' placeholder='Search' />
+                <input type='search' class='SearchInput' placeholder='Search' />
 
-            <button  class='NewButton' onclick='CREATECONTACTPAGE()' >New</button>
+                <button  class='NewButton' onclick='CREATECONTACTPAGE()' >New</button>
 
-        </header>
+            </header>
 
-        <div class='MyData'></div>
-
-        <div class='MyContacts' >
-
-            <br><br>
-            
-            <p class='colorteal'>No Contacts Saved</p>
-
-            <br><br>
-
-            <button onclick='CREATECONTACTPAGE()' class='teal'> Create New Contact </button>
-        
-        </div>
-
-    `);
-
-    DECLARATION('.MyData',(ELEMENT)=>{
-
-        DEJSON('local','UserData',(data)=>{
-
-            DISPLAY(ELEMENT,`
+            <div class='MyData'>
 
                 <p class='HomeUserName'>${data.UserName}</p>
 
@@ -406,23 +83,349 @@ const HOMEPAGE=()=>{
                 </div>
 
                 <img class='UserMoreIcon' src='${WHITESINGLEBACKICON}'/>
+            
+            </div>
 
-            `);
+            <div class='MyContacts' >
 
-            CLICKED('.UserMoreIcon',()=>{
+                <br><br>
+                
+                <p class='colorteal'>No Contacts Saved</p>
 
-                USERACCOUNTPAGE(data);
+                <br><br>
 
-            });
+                <button onclick='CREATECONTACTPAGE()' class='teal'> Create New Contact </button>
+            
+            </div>
 
-            APPSDOWNLOAD(data.UserEmail,'Connections','Contacts');
+        `);
+
+        HOMECONTACTS();
+    
+        CLICKED('.UserMoreIcon',()=>{
+
+            USERACCOUNTPAGE(data);
+
         });
 
     });
 
-   HOMEPAGEDESIGN();
+}
 
-};
+const USERMONITORING=()=>{
+
+    DEJSON('local','UserData',(datata)=>{
+
+        GETDATA(SHEETSLINKS,'Users',(data)=>{
+
+            FINDER(data,'UserEmail',datata.UserEmail,(users)=>{
+    
+                if (users.UserEmail === datata.UserEmail) {
+    
+    
+                } else {
+                   
+                    DELETESTORAGE('local','UserData');
+
+                    RELOADPAGE();
+    
+                };
+    
+            });
+    
+        });
+    
+    });
+
+}
+
+const HOMECONTACTS=()=>{
+
+    DECLARATION('.MyContacts',(ELEMENT)=>{
+
+        CLEAR(ELEMENT);
+
+        DATAGETTER('Connections','Contacts',(data)=>{
+
+            if (!data.Deleted) {
+
+                TIMER(data.DateCreated,(times)=>{
+
+                    CREATEELEMENT('div','ContactsDiv',(ELEMENTE)=>{
+    
+                        DISPLAY(ELEMENTE,`
+    
+                            <div class='contactUserImage'>
+    
+                                <img class='contactUserImag' src='${data.UserImage || BLACKIMAGEICON }'/>
+                            
+                            </div>
+        
+                            <p class='ContactName'>${data.UserName}</p>
+        
+                            <p class='PhoneNumber'>${data.UserFirstNumber}</p>
+    
+                            <p class='ContactTimes'>${times}</p>
+         
+                        `);
+        
+                        ADD(ELEMENT,ELEMENTE);
+        
+                        CREATEELEMENT('img','UserMoreIcon',(ELEMENTEE)=>{
+        
+                            ELEMENTEE.src=WHITESINGLEBACKICON;
+        
+                            ADD(ELEMENTE,ELEMENTEE);
+    
+                            EVENT(ELEMENTEE,'click',()=>{
+    
+                                USERNUMBERPAGE(data);
+    
+                            });
+        
+                        });
+        
+                    });
+    
+                });
+                    
+            };
+
+        });
+
+    });
+
+}
+
+const LOGINPAGE=()=>{
+
+    DISPLAY('',`
+
+        <img class='AppLogo' src='${localStorage.getItem('AppIcon')}'/>
+
+          <p>Cloud Storage For Your Contacts</p>
+
+        <p class='LeftedText'>Enter Email</p>
+
+        <input type='email' class='Input' id='Email' />
+
+        <button class='forestgreen'>Log In</button>
+
+        <button onclick='CREATEACCOUNTPAGE()' class='blue'>Create Account</button>
+        
+    `);
+
+    const Email=document.querySelector('#Email');
+
+    DECLARATION('.forestgreen',(ELEMENT)=>{
+
+        CLICKED('.forestgreen',()=>{
+
+            if (!Email.value) {
+
+                TOAST('Enter Your Email');
+                
+            } else {
+
+                if (!localStorage.getItem('NetWork')) {
+
+                    TOAST('Check Your Internet Connection');
+                    
+                } else {
+
+                    LOADER(ELEMENT);
+
+                    GETDATA(SHEETSLINKS,'Users',(data)=>{
+
+                        FINDER(data,'UserEmail',Email.value,(users)=>{
+
+                            if (users.UserEmail === Email.value ) {
+
+                                RANDOMCODE((code)=>{
+
+                                    POSTMAIL(Email.value,'Contacts Login',`Dear ${users.UserName},Your Login Code is ${code}`,(MyEmail)=>{
+                                        
+                                        JSONIFICATION(users,(Mydaa)=>{
+
+                                            STORE('local','Code',code);
+
+                                            STORE('local','MyData',Mydaa);
+        
+                                            LOGINACCOUNTVERIFICATIONPAGE();
+        
+                                        });
+                                    
+                                    }); 
+                                       
+                                });
+
+                            } else {
+                               
+                                TOAST('No User Account Found');
+
+                                ORIGIN(ELEMENT,'Log In');
+
+                            };
+
+                        });
+
+                    });
+                    
+                };
+                
+            };
+
+        });
+
+    });
+    
+}
+
+const HOMENUMBERS=()=>{
+
+    if (localStorage.getItem('NetWork')) {
+
+        DEJSON('local','UserData',(data)=>{
+
+            DATABASESAVER(SHEETSLINKS,data.UserEmail,'Connections','Contacts',(dta)=>{
+        
+                if (dta === true ) {
+        
+                    HOMEPAGE();
+                
+                } else {
+        
+                    DATABASEUPDATER(SHEETSLINKS,data.UserEmail,'Connections','Contacts');
+                    
+                };
+        
+            });
+
+        });
+
+    };
+    
+}
+
+const LOGINACCOUNTVERIFICATIONPAGE=()=>{
+
+    DISPLAY('',`
+
+        <img class='AppLogo' src='${localStorage.getItem('AppIcon')}'/>
+
+        <p class='LeftedText'>Verification Code</p>
+
+        <input type='tel' class='Input' maxlength='6' id='EmailCode' placeholder='******' />
+ 
+        <button class='forestgreen'>Verify</button>
+
+        <button class='blue'>Cancel</button>
+        
+    `);
+
+    const EmailCode=document.querySelector('#EmailCode');
+
+    CLICKED('.blue',()=>{
+
+        DELETESTORAGE('local','MyData');
+
+        RELOADPAGE();
+
+    });
+
+    CLICKED('.forestgreen',()=>{
+
+        DECLARATION('.forestgreen',(ELEMENT)=>{
+
+            if (!EmailCode.value) {
+                
+                TOAST('Enter Verification Code');
+
+            } else {
+
+                if (EmailCode.value !== localStorage.getItem('Code') ) {
+
+                    TOAST('Enter Correct Verification Code');
+                    
+                } else {
+
+                    if (!localStorage.getItem('NetWork')) {
+
+                        TOAST('Check Your Internet Connection');
+                        
+                    } else {
+
+                        LOADER(ELEMENT);
+
+                        DEJSON('local','MyData',(data)=>{
+
+                            JSONIFICATION(data,(ThisData)=>{
+
+                                STORE('local','UserData',ThisData);
+
+                                DATABASESAVER(SHEETSLINKS,data.UserEmail,'Connections','Contacts',(dta)=>{
+
+                                    DELETESTORAGE('local','MyData');
+    
+                                    if (dta === true ) {
+    
+                                        HOMEPAGE();
+                                        
+                                    } else {
+    
+                                        DATABASEUPDATER(SHEETSLINKS,data.UserEmail,'Connections','Contacts');
+    
+                                        HIDER(2000,()=>{
+    
+                                            HOMEPAGE();
+    
+                                        });
+                                        
+                                    };
+    
+                                })
+
+                            })
+
+                        });
+                        
+                    };
+                    
+                };
+                
+            };
+
+        });
+
+    });
+
+}
+
+const USERACCOUNTPAGE=(data)=>{
+
+    DISPLAY('',`
+
+        <header>
+
+            <img class='BackIcon' onclick='HOMEPAGE()' src='${WHITESINGLEBACKICON}'/>
+        
+            <img class='RightIcon' onclick='SETTINGSPAGE()' src='${WHITESETTINGICON}'/>
+
+        </header>
+
+        <div class='ContactDiv'>
+
+            <div class='CreateImageHodler'>
+
+                <img class='Usericon' src='${data.UserImage||BLACKIMAGEICON}'/>
+            
+            </div>
+
+        </div>
+        
+    `);
+
+}
 
 const CREATECONTACTPAGE=()=>{
 
@@ -525,19 +528,27 @@ const CREATECONTACTPAGE=()=>{
 
                 DEJSON('local','UserData',(data)=>{
     
-                    INSERTDATA(DATABASELINK,data.UserEmail,HEADERS,USERDATA,(response)=>{
+                    INSERTDATA(SHEETSLINKS,data.UserEmail,HEADERS,USERDATA,(response)=>{
     
-                        DATABASESAVER(DATABASELINK,data.UserEmail,'Connections','Contacts',(data)=>{
-
-                            if (data === false ) {
+                        DATABASESAVER(SHEETSLINKS,data.UserEmail,'Connections','Contacts',(dta)=>{
+        
+                            if (dta === true ) {
                     
-                                DATABASEUPDATER(DATABASELINK,data.UserEmail,'Connections','Contacts');
-                                
-                                HOMEPAGE();
+                                HIDER(2000,()=>{
 
+                                    HOMEPAGE();
+
+                                });
+                            
                             } else {
                     
-                                HOMEPAGE();
+                                DATABASEUPDATER(SHEETSLINKS,data.UserEmail,'Connections','Contacts');
+
+                                HIDER(2000,()=>{
+
+                                    HOMEPAGE();
+
+                                });
                                 
                             };
                     
@@ -555,83 +566,130 @@ const CREATECONTACTPAGE=()=>{
 
 }
 
-const USERACCOUNTPAGE=(data)=>{
+const EMAILVERIFICATIONPAGE=()=>{
 
     DISPLAY('',`
 
-        <header>
+        <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
 
-            <img class='BackIcon' onclick='HOMEPAGE()' src='${WHITESINGLEBACKICON}'/>
-        
-            <img class='RightIcon' onclick='SETTINGSPAGE()' src='${WHITESETTINGICON}'/>
+        <p>Cloud Storage For Your Contacts</p>
 
-        </header>
+        <input type='tel' maxlength='6' id='Code' class='Input' placeholder='Enter Verification Code' />
 
-        <div class='ContactDiv'>
+        <button class='forestgreen'>Verify</button>
 
-            <div class='CreateImageHodler'>
-
-                <img class='Usericon' src='${BLACKIMAGEICON}'/>
-            
-            </div>
-
-        </div>
+        <button class='blue'>Cancel</button>
         
     `);
 
-}
+    CLICKED('.blue',()=>{
 
-const HOMEPAGEDESIGN=()=>{
+        DELETESTORAGE('local','User');
 
-    DECLARATION('.MyContacts',(ELEMENT)=>{
+        AUTORUN();
 
-        CLEAR(ELEMENT);
+    });
 
-        DATAGETTER('Connections','Contacts',(data)=>{
+    DECLARATION('.forestgreen',(ELEMENT)=>{
 
-            if (!data.Deleted) {
+        EVENT(ELEMENT,'click',()=>{
 
-                TIMER(data.DateCreated,(times)=>{
+            DECLARATION('#Code',(EMAILINPUT)=>{
 
-                    CREATEELEMENT('div','ContactsDiv',(ELEMENTE)=>{
-    
-                        DISPLAY(ELEMENTE,`
-    
-                            <div class='contactUserImage'>
-    
-                                <img class='contactUserImag' src='${data.UserImage || BLACKIMAGEICON }'/>
-                            
-                            </div>
-        
-                            <p class='ContactName'>${data.UserName}</p>
-        
-                            <p class='PhoneNumber'>${data.UserFirstNumber}</p>
-    
-                            <p class='ContactTimes'>${times}</p>
-         
-                        `);
-        
-                        ADD(ELEMENT,ELEMENTE);
-        
-                        CREATEELEMENT('img','UserMoreIcon',(ELEMENTEE)=>{
-        
-                            ELEMENTEE.src=WHITESINGLEBACKICON;
-        
-                            ADD(ELEMENTE,ELEMENTEE);
-    
-                            EVENT(ELEMENTEE,'click',()=>{
-    
-                                USERNUMBERPAGE(data);
-    
-                            });
-        
-                        });
-        
-                    });
-    
-                });
+                if (!EMAILINPUT.value) {
+
+                    TOAST('Enter Verification Code');
+
+                    return;
                     
-            };
+                }
+
+                DEJSON('local','User',(Mydata)=>{
+
+                    if (EMAILINPUT.value !== Mydata.UserCode  ) {
+
+                        TOAST('Invalid Verification Code');
+    
+                        return;
+                        
+                    };
+    
+                    LOADER(ELEMENT);
+
+                    GETDATA(SHEETSLINKS,'Users',(data)=>{
+    
+                        FINDER(data,'UserEmail',Mydata.UserEmail,(users)=>{
+                            
+                            if (users.UserEmail === Mydata.UserEmail ) {
+    
+                                TOAST('User Account Found');
+
+                                ORIGIN(ELEMENT,'Verify');
+    
+                                return;
+                                
+                            };
+
+                            const HEADER=['UserName','UserEmail','UserPassword','CreatedOn','Device'];
+
+                            TIMENOW((time)=>{
+
+                                DEVICED((device)=>{
+
+                                    const DATA=[Mydata.UserName,Mydata.UserEmail,Mydata.UserPassword,time,device]
+
+                                    INSERTDATA(SHEETSLINKS,'Users',HEADER,DATA,(data)=>{
+
+                                        CREATETABLE(SHEETSLINKS,Mydata.UserEmail,(datata)=>{
+
+                                            GETDATA(SHEETSLINKS,'Users',(datate)=>{
+    
+                                                FINDER(datate,'UserEmail',Mydata.UserEmail,(users)=>{
+                                                    
+                                                    if (users.UserEmail === Mydata.UserEmail ) {
+
+                                                        JSONIFICATION(users,(Users)=>{
+
+                                                            DELETESTORAGE('local','User');
+
+                                                            STORE('local','UserData',Users);
+
+                                                            DATABASESAVER(SHEETSLINKS,Mydata.UserEmail,'Connections','Contacts',(data)=>{
+
+                                                                if (data === true ) {
+                                                        
+                                                                    HOMEPAGE();
+                            
+                                                                    return;
+                                                                    
+                                                                };
+                                                        
+                                                            });
+                                                        
+                                                        });
+                            
+                                                    };
+                                                });
+
+                                            });
+
+                                        });
+                                        
+                                    });
+
+                                });
+
+                            });
+
+                            return;
+    
+                        });
+    
+                    });
+
+                });
+
+            });
 
         });
 
@@ -977,41 +1035,117 @@ const DELETEDCONTACTSPAGE=()=>{
 
 }
 
-function handleCameraCapture(event) {
-    const fileInput = event.target;
+const CREATEACCOUNTPAGE=()=>{
 
-    // Check if a file was selected
-    if (fileInput.files.length === 0) {
-        // Show toast message for no image captured
-        showToast("Error: No image captured.");
-        return;
-    }
+    DISPLAY('',`
 
-    const file = fileInput.files[0];
-    const reader = new FileReader();
+        <div class='CreateDiv'>
 
-    reader.onload = function(e) {
-        // Display the captured image
-        const imgElement = document.getElementById("capturedImage");
-        imgElement.src = e.target.result;
-        imgElement.style.display = "block"; // Show the image
-    };
+            <img class='AppLogo' onclick='RELOADPAGE()' src='${localStorage.getItem('AppIcon')}'/>
 
-    reader.onerror = function() {
-        // Show toast message for an error while reading the file
-        showToast("Error: Unable to read the image.");
-    };
+            <p>Cloud Storage For Your Contacts</p>
 
-    reader.readAsDataURL(file);
-}
+            <p class='LeftedText'>Enter Your Name</p>
+    
+            <input type='text' id='Name' class='Input' />
 
-function showToast(message) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.style.display = "block";
+            <p class='LeftedText'>Enter Your Email</p> 
 
-    // Hide the toast after 3 seconds
-    setTimeout(() => {
-        toast.style.display = "none";
-    }, 3000);
-}
+            <input type='email' id='Email' class='Input'/>
+
+            <p class='LeftedText'>Enter Your Pin</p>
+
+            <input type='tel' id='Code' maxlength='6'  class='Input' placeholder='******' Pin Code'/>
+
+            <button class='forestgreen'>Sign Up</button>
+
+            <button class='blue'>LogIn</button>
+        
+        </div>
+
+
+        
+    `);
+
+    CLICKED('.blue',()=>{
+
+        LOGINPAGE();
+
+    });
+
+    DECLARATION('.forestgreen',(ELEMENT)=>{
+
+        EVENT(ELEMENT,'click',()=>{
+
+            DECLARATION('#Name',(EMAILINPUTONE)=>{
+
+                if (!EMAILINPUTONE.value) {
+
+                    TOAST('Enter User Name');
+
+                    return;
+                    
+                };
+
+                DECLARATION('#Email',(EMAILINPUT)=>{
+
+                    if (!EMAILINPUT.value) {
+    
+                        TOAST('Enter Email');
+    
+                        return;
+                        
+                    }
+
+                    DECLARATION('#Code',(EMAILINPUTTWO)=>{
+
+                        if (!EMAILINPUT.value) {
+        
+                            TOAST('Enter Pin Code');
+        
+                            return;
+                            
+                        };
+
+                        LOADER(ELEMENT);
+
+                        GETDATA(SHEETSLINKS,'Users',(data)=>{
+
+                            RANDOMCODE((code)=>{
+
+                                const DATA={
+                                    "UserName":EMAILINPUTONE.value,
+                                    "UserEmail":EMAILINPUT.value,
+                                    "UserPassword":EMAILINPUTTWO.value,
+                                    "UserCode":code
+                                }
+
+                                POSTMAIL(EMAILINPUT.value,'Connections Account Creation',`Dear ${EMAILINPUT.value} \n Your Verification Code is ${code}`,(response)=>{
+
+                                    JSONIFICATION(DATA,(user)=>{
+
+                                        STORE('local','User',user);
+
+                                        EMAILVERIFICATIONPAGE();
+
+                                        return;
+
+                                    })
+
+                                });
+
+                            });
+
+                        });
+        
+                    });
+    
+                });
+
+            });
+
+        });
+
+    });
+
+};

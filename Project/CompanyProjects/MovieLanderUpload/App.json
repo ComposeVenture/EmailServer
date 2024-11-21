@@ -1,10 +1,10 @@
 [
     {
-        "Name":"Movie Lander Upload",
-        "PacakageName":"com.composeventure.compose_cinematic_uploader",
-        "Color":"#000000",
-        "LinksFuntions":"https://composeventure.github.io/SERVER/Project/MovieLanderUpload/MovieLanderUploader.js",
-        "LinksStyles":"https://composeventure.github.io/SERVER/Project/MovieLanderUpload/MovieLanderUploader.css",
-        "Version":"01"
+        "NAME":"Movie Lander Updater",
+        "PACKAGE":"com.composeventure.compose_store",
+        "DETAILS":"Its a App Store From E-corp Company Group",
+        "VERSION":"1",
+        "COLOR":"000000",
+        "DATABASELINK":"https://docs.google.com/spreadsheets/d/1kd15tCp1cX6TIUSsm3GcrfxDvOrmqlTNxAaseR8LBhw/edit"
     }
 ]

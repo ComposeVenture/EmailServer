@@ -1,0 +1,311 @@
+.Moto{
+    font-size: 16px;
+    margin: auto;
+    margin-bottom: 5%;
+}
+
+.BorderButton{
+    border: none;
+    display: inline-flex;
+}
+
+.leftText{
+    font-size: 18px;
+    margin: auto;
+    margin-left: 0.1rem;
+    text-align: left;
+}
+
+.RightText{
+    font-size: 16px;
+    margin: auto;
+    margin-right: 1rem;
+    text-align: right;
+}
+
+#ForgotPassword{
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.AndroidHomeDiv{
+    background: transparent;
+    overflow-y: auto;
+}
+
+#Paymentphoto{
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    margin-top: 1rem;
+    border-radius: 100px;
+    background: #cdcdcd50;
+    padding: 1%;
+}
+
+.PaymentPackageHolders{
+   display: inline-flex;
+   background: transparent;
+   height: 45%;
+   top: auto;
+   bottom: 70px;
+   overflow-x: auto;
+}
+
+#PaymentButton{
+    position: absolute;
+    bottom: 0;
+    border: 1px solid forestgreen;
+}
+
+.PaymentSections{
+    position: relative;
+    background: transparent;
+    box-shadow: 0px 1px 10px 0px forestgreen ;
+    width: 70%;
+    height: 95%;
+    margin: auto;
+    border-radius: 10px;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.PaymentSections:hover{
+    box-shadow: 0px 1px 10px 0px orange ; 
+}
+
+.PaymentIframe{
+    background: transparent;
+    top: 50px;
+    overflow-y: auto;
+}
+
+.RighText{
+    font-size: 20px;
+    margin: auto;
+    margin-right: 1rem;
+}
+
+#NotMyAccount{
+    position: relative;
+    top: 2%;
+    margin-right: 0.2rem;
+}
+
+.HomeDivHolders{
+    position: relative;
+    width: 98%;
+    height: 35%;
+    background: transparent;
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 1%;
+    margin-bottom: 5%;
+}
+
+.HomeSectionName{
+    position: absolute;
+    font-size: 18px;
+    left: 1%;
+    top: 5%;
+    margin: auto;
+}
+
+.HomeMoreIcon{
+    position: absolute;
+    right: 2%;
+    top: 3%;
+    transform: rotate(180deg);
+}
+
+.HomeMoviesHolder{
+    background: transparent;
+    top: 40px;
+    width: 100%;
+    display: inline-flex;
+    overflow-x: auto;
+}
+
+.HomeMoviesImages{
+    position: relative;
+    width: 35%;
+    height: 98%;
+    margin: auto;
+    margin-left: 0.1rem;
+    margin-right:0.1rem;
+    flex-shrink: 0;
+    border-radius: 5px;
+}
+
+.ProfileHolder{
+    background: transparent;
+    top: 50px;
+    overflow-y: auto;
+}
+
+.UserDataHolder{
+    position: relative;
+    background: transparent;
+    height: 35%;
+    width: 98%;
+    margin: auto;
+    border-radius: 5px;
+    border: 1px solid #cdcdcd20;
+    margin-top: 3%;
+}
+
+.UserDetailsHolders{
+    position: relative;
+    background: transparent;
+    height: auto;
+    bottom: 0px;
+}
+
+.MyProfileImage{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+}
+
+.MyDetailsDiv{
+    background: transparent;
+    width: 50%;
+    right: 0;
+}
+
+.LeftedText{
+    margin: auto;
+    text-align: left;
+    margin-right: 90%;
+    font-size: 18px;
+    margin-left: 1rem;
+}
+
+#DetailsButton{
+    background: transparent;
+    margin: auto;
+    height: 15%;
+}
+
+.UserDetailsDiv{
+    background: transparent;
+    height: 50px;
+    display: inline-flex;
+    left: 0;
+    top: auto;
+    bottom: 0;
+    border-top: 1px solid #cdcdcd20;
+}
+
+.UpdateProfile{
+    background: #cdcdcd20;
+    width: 98%;
+    left: 1%;
+    margin-top: 0.5rem;
+    border-radius: 5px;
+}
+
+.CatergoryHolders{
+    position: relative;
+    width: 30%;
+    height: 25%;
+    background: transparent;
+    display: inline-table;
+    margin: auto;
+    margin-left: 1.3%;
+    margin-right: 2%;
+    border-radius: 5px;
+}
+
+.CatergoryImage{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #cdcdcd20;
+}
+
+.CountriesDiv{
+    background: #000000;
+    display: none;
+}
+
+.HomeSingleDivHolders{
+    position: relative;
+    width: 98%;
+    height: 35%;
+    background: transparent;
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 1%;
+    margin-bottom: 5%;
+}
+
+.SingleMovieImages{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.DetailsImageHolder{
+    position: relative;
+    background: transparent;
+    height: 35%;
+    width: 40%;
+    margin: auto;
+    margin-left: 0.3rem;
+    margin-top: 0.3rem;
+    border-radius: 5px;
+}
+
+.Image{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.PlayIcon{
+    margin: 25%;
+    top: 15%;
+    width: 30%;
+    background: #00000080;
+    padding: 5%;
+    border-radius: 20px;
+}
+
+.DetailsLabels{
+    text-align: left;
+    margin: auto;
+    margin-top: 3%;
+    margin-left: 5%;
+    margin-bottom: 0rem;
+    color: teal;
+}
+
+.MovieDetailsHolder{
+    background: transparent;
+    right: 0;
+    width: 57%;
+    height: 35%;
+    top: 1%;
+    border-left: 1px solid #cdcdcd50;
+}
+
+#MovieScenes{
+    display: inline-flex;
+    overflow-x: auto;
+    height: auto;
+}
+
+#MovieScene{
+    flex-shrink: 0;
+    width: 70%;
+    height: 100%;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.TubePlayer{
+    top: 50px;
+}

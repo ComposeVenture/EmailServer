@@ -3,8 +3,6 @@
         "Name":"Movie Lander",
         "PacakageName":"com.composeventure.compose_cinematic",
         "Color":"#000000",
-        "LinksFuntions":"https://composeventure.github.io/SERVER/Project/MovieLander/MovieLander.js",
-        "LinksStyles":"https://composeventure.github.io/SERVER/Project/MovieLander/MovieLander.css",
         "Version":"01"
     }
 ]

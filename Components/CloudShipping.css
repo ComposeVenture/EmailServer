@@ -1,2 +1,0 @@
-.LoadingIcon{ position: relative; width: 25px; height: 25px; background: transparent; margin: auto; animation: spin 1s linear infinite reverse; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } ; }
-.LeftIcon{ margin-left: 0.5rem; } .RightIcon{ margin-right: 0.5rem;} .Input{ border: 1px solid #cdcdcd20; border-radius: 10px; padding: 1%; left: 0.8%; }

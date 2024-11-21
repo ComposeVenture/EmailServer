@@ -1,0 +1,1 @@
+const OFFLINEMESSAGE='Your Offline,Check Your Internet Connection';
